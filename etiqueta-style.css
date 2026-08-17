@@ -816,11 +816,39 @@ kbd{
 
 /* ---------- 11. Login ---------- */
 #loginScreen{
+  display:none;
+  min-height:100vh;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+
+/* ---------- Verificação de sessão (evita "piscar" a tela de login) ---------- */
+#authCheck{
   min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:24px;
+}
+#authCheck .spinner{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  border:3px solid var(--line);
+  border-top-color:var(--signal);
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+#loginScreen{animation:fadeIn .35s ease both;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+/* ---------- Transição fluida entre páginas (Chrome) ---------- */
+@media (prefers-reduced-motion: no-preference){
+  ::view-transition-old(root),
+  ::view-transition-new(root){
+    animation-duration:.32s;
+    animation-timing-function:cubic-bezier(.4,0,.2,1);
+  }
 }
 
 .login-card{

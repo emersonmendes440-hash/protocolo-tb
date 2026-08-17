@@ -7,6 +7,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="view-transition" content="same-origin">
 <style>
   :root{
     --accent:#ff4d5e;
@@ -81,12 +82,36 @@
   /* ---------- Login gate ---------- */
   #appScreen{display:none;}
   #loginScreen{
+    display:none;
     max-width:380px;margin:80px auto 0;background:var(--panel);border:1px solid var(--line);
     border-radius:var(--radius);padding:32px 28px;box-shadow:var(--shadow);animation:fadeUp .5s ease both;
   }
   #loginScreen h2{margin:0 0 6px;font-size:20px;color:var(--ink);}
   #loginScreen p{margin:0 0 22px;color:var(--muted);font-size:13px;}
   #loginError{color:#ff6b7a;font-size:12.5px;margin-top:12px;min-height:16px;}
+
+  /* ---------- Verificação de sessão (evita "piscar" a tela de login) ---------- */
+  #authCheck{
+    display:flex;align-items:center;justify-content:center;
+    margin:160px auto 0;
+  }
+  #authCheck .spinner{
+    width:30px;height:30px;border-radius:50%;
+    border:3px solid var(--line);border-top-color:var(--accent);
+    animation:spin .7s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  #appScreen,#loginScreen{animation:fadeIn .35s ease both;}
+  @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+  /* ---------- Transição fluida entre páginas (Chrome) ---------- */
+  @media (prefers-reduced-motion: no-preference){
+    ::view-transition-old(root),
+    ::view-transition-new(root){
+      animation-duration:.32s;
+      animation-timing-function:cubic-bezier(.4,0,.2,1);
+    }
+  }
 
   /* ---------- Carrier tabs ---------- */
   .carriers{
@@ -405,6 +430,9 @@
 
 <div class="wrap">
 
+  <!-- ============ VERIFICANDO SESSÃO ============ -->
+  <div id="authCheck"><div class="spinner"></div></div>
+
   <!-- ============ LOGIN ============ -->
   <div id="loginScreen">
     <h2>Entrar</h2>
@@ -529,6 +557,7 @@
   const db = getFirestore(app);
   window.__cloud = { db, doc, setDoc, onSnapshot };
 
+  const authCheck = document.getElementById('authCheck');
   const loginScreen = document.getElementById('loginScreen');
   const appScreen = document.getElementById('appScreen');
   const loginForm = document.getElementById('loginForm');
@@ -537,6 +566,7 @@
   const logoutBtn = document.getElementById('logoutBtn');
 
   onAuthStateChanged(auth, (user)=>{
+    authCheck.style.display = 'none';
     if(user){
       loginScreen.style.display = 'none';
       appScreen.style.display = 'block';

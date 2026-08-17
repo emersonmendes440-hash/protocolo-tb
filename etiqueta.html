@@ -9,6 +9,7 @@
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#0E141B">
+<meta name="view-transition" content="same-origin">
 
 <!-- Tipografia: Barlow (interface), Barlow Condensed (etiquetas), JetBrains Mono (dados).
      Se estiver offline, as fontes de sistema assumem automaticamente. -->
@@ -19,6 +20,9 @@
 <link rel="stylesheet" href="etiqueta-style.css">
 </head>
 <body>
+
+<!-- ============ VERIFICANDO SESSÃO ============ -->
+<div id="authCheck"><div class="spinner"></div></div>
 
 <!-- ============ LOGIN ============ -->
 <div id="loginScreen">
@@ -257,6 +261,7 @@
   const app = initializeApp(window.FIREBASE_CONFIG);
   const auth = getAuth(app);
 
+  const authCheck = document.getElementById('authCheck');
   const loginScreen = document.getElementById('loginScreen');
   const appScreen = document.getElementById('appScreen');
   const loginForm = document.getElementById('loginForm');
@@ -265,6 +270,7 @@
   const logoutBtn = document.getElementById('logoutBtn');
 
   onAuthStateChanged(auth, (user)=>{
+    authCheck.style.display = 'none';
     if(user){
       loginScreen.style.display = 'none';
       appScreen.style.display = 'contents';

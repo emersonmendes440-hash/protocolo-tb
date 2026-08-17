@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Expedição · Gerador de Etiquetas — TB Comércio de Presentes</title>
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#0E141B">
+
+<!-- Tipografia: Barlow (interface), Barlow Condensed (etiquetas), JetBrains Mono (dados).
+     Se estiver offline, as fontes de sistema assumem automaticamente. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="etiqueta-style.css">
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <h2>Entrar</h2>
+    <p>Acesso restrito à equipe da TB Comércio de Presentes.</p>
+    <form id="loginForm">
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" id="loginEmail" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label>Senha</label>
+        <input type="password" id="loginPassword" autocomplete="current-password" required>
+      </div>
+      <button class="btn btn--primary" type="submit" id="loginBtn">Entrar</button>
+      <div id="loginError"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ APP (só aparece depois do login) ============ -->
+<div id="appScreen">
+
+<!-- ============ BARRA SUPERIOR ============ -->
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-text">
+      <strong>Expedição</strong>
+      <small>Gerador de etiquetas · 100 × 122 mm</small>
+    </span>
+  </div>
+
+  <nav class="tool-switch" aria-label="Alternar ferramenta">
+    <a href="index.html"><span>Protocolo de Coleta</span></a>
+    <a href="etiqueta.html" class="active"><span>Etiqueta de Transportadora</span></a>
+  </nav>
+
+  <div style="display:flex;align-items:center;gap:14px;">
+    <ul class="shortcuts" aria-label="Atalhos de teclado">
+      <li><kbd>Enter</kbd> próximo campo</li>
+      <li><kbd>F2</kbd> gerar etiquetas</li>
+      <li><kbd>F4</kbd> imprimir</li>
+      <li><kbd>Esc</kbd> limpar</li>
+    </ul>
+    <button id="logoutBtn" class="logout-btn" style="display:none;">Sair</button>
+  </div>
+</header>
+
+<main class="workspace">
+
+  <!-- ============ PAINEL DO FORMULÁRIO ============ -->
+  <section class="panel panel--form" aria-label="Dados do envio">
+    <form id="form-etiqueta" autocomplete="off" novalidate>
+
+      <!-- ---- Destinatário ---- -->
+      <fieldset class="group">
+        <legend class="group-title"><span class="group-index">01</span> Destinatário</legend>
+
+        <div class="field field--full">
+          <label for="nome">Nome do destinatário</label>
+          <input type="text" id="nome" name="nome" data-required placeholder="Nome ou razão social">
+        </div>
+
+        <div class="field field--cep">
+          <label for="cep">CEP</label>
+          <input type="text" id="cep" name="cep" data-required inputmode="numeric"
+                 maxlength="9" placeholder="00000-000" class="mono">
+          <p class="hint" id="cep-status" role="status" aria-live="polite">Busca automática de endereço</p>
+        </div>
+
+        <div class="field field--endereco">
+          <label for="endereco">Endereço</label>
+          <input type="text" id="endereco" name="endereco" data-required placeholder="Preenchido pelo CEP">
+        </div>
+
+        <div class="field field--numero">
+          <label for="numero">Número</label>
+          <input type="text" id="numero" name="numero" data-required class="mono" placeholder="270">
+        </div>
+
+        <div class="field field--complemento">
+          <label for="complemento">Complemento <span class="opt">opcional</span></label>
+          <input type="text" id="complemento" name="complemento" placeholder="Sala, bloco, apto">
+        </div>
+
+        <div class="field field--bairro">
+          <label for="bairro">Bairro</label>
+          <input type="text" id="bairro" name="bairro" data-required placeholder="Preenchido pelo CEP">
+        </div>
+
+        <div class="field field--cidade">
+          <label for="cidade">Cidade</label>
+          <input type="text" id="cidade" name="cidade" data-required placeholder="Preenchido pelo CEP">
+        </div>
+
+        <div class="field field--uf">
+          <label for="uf">UF</label>
+          <select id="uf" name="uf" data-required>
+            <option value="">--</option>
+            <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
+            <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
+            <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
+            <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
+            <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
+            <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
+            <option>SP</option><option>SE</option><option>TO</option>
+          </select>
+        </div>
+      </fieldset>
+
+      <!-- ---- Pedido ---- -->
+      <fieldset class="group">
+        <legend class="group-title"><span class="group-index">02</span> Pedido</legend>
+
+        <div class="field field--danfe">
+          <label for="danfe">Chave de acesso da NF-e <span class="opt">44 dígitos</span></label>
+          <input type="text" id="danfe" name="danfe" inputmode="numeric" maxlength="54"
+                 class="mono" placeholder="Cole a chave aqui" autocomplete="off">
+          <p class="hint" id="danfe-status" role="status" aria-live="polite">Preenche série e nota fiscal e imprime o código de barras.</p>
+        </div>
+
+        <div class="field field--nf">
+          <label for="nf">Nota fiscal</label>
+          <input type="text" id="nf" name="nf" data-required inputmode="numeric" class="mono" placeholder="000000">
+        </div>
+
+        <div class="field field--serie">
+          <label for="serie">Série</label>
+          <input type="text" id="serie" name="serie" inputmode="numeric" maxlength="3" class="mono" placeholder="1">
+        </div>
+
+        <div class="field field--tipo">
+          <span class="label-like">Tipo</span>
+          <div class="segmented" role="radiogroup" aria-label="Tipo do pedido">
+            <label class="segment">
+              <input type="radio" name="tipo" value="TBS" checked>
+              <span>TBS</span>
+            </label>
+            <label class="segment">
+              <input type="radio" name="tipo" value="TRAN">
+              <span>TRAN</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field field--pedido">
+          <label for="pedido">Número do pedido</label>
+          <input type="text" id="pedido" name="pedido" data-required inputmode="numeric" class="mono" placeholder="0049974">
+        </div>
+
+        <output class="code-preview" id="codigo-preview" for="pedido">
+          <span class="code-preview-key">Identificação</span>
+          <strong id="codigo-valor">TBS-—</strong>
+        </output>
+      </fieldset>
+
+      <!-- ---- Envio ---- -->
+      <fieldset class="group">
+        <legend class="group-title"><span class="group-index">03</span> Envio</legend>
+
+        <div class="field field--transportadora">
+          <label for="transportadora">Transportadora</label>
+          <div class="autocomplete">
+            <input type="text" id="transportadora" name="transportadora" data-required
+                   placeholder="Digite para buscar" role="combobox"
+                   aria-expanded="false" aria-autocomplete="list" aria-controls="sugestoes">
+            <ul class="suggestions" id="sugestoes" role="listbox" hidden></ul>
+          </div>
+          <p class="hint">Enter aceita a sugestão em destaque. Nomes novos são salvos na lista.</p>
+        </div>
+
+        <div class="field field--volumes">
+          <label for="volumes">Volumes</label>
+          <div class="stepper">
+            <button type="button" class="stepper-btn" data-step="-1" aria-label="Diminuir volumes">−</button>
+            <input type="number" id="volumes" name="volumes" value="1" min="1" max="999" class="mono">
+            <button type="button" class="stepper-btn" data-step="1" aria-label="Aumentar volumes">+</button>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- ---- Ações ---- -->
+      <div class="actions">
+        <button type="submit" class="btn btn--primary" id="btn-gerar">
+          Gerar etiquetas <kbd>F2</kbd>
+        </button>
+        <button type="button" class="btn btn--ghost" id="btn-limpar">
+          Limpar <kbd>Esc</kbd>
+        </button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ============ PAINEL DE PRÉ-VISUALIZAÇÃO ============ -->
+  <section class="panel panel--preview" aria-label="Etiquetas geradas">
+    <div class="preview-toolbar">
+      <div class="preview-status">
+        <strong id="contador">Nenhuma etiqueta</strong>
+        <small>Tamanho real · 100 × 122 mm</small>
+      </div>
+      <button type="button" class="btn btn--dark" id="btn-imprimir" disabled>
+        Imprimir <kbd>F4</kbd>
+      </button>
+    </div>
+
+    <p class="print-tip">
+      Na janela de impressão: <b>Margens → Nenhuma</b> e desmarque <b>Cabeçalhos e rodapés</b>.
+    </p>
+
+    <div class="labels" id="labels">
+      <div class="empty" id="empty-state">
+        <div class="empty-art" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <p><strong>As etiquetas aparecem aqui.</strong></p>
+        <p>Preencha o CEP para puxar o endereço, informe a quantidade de volumes e gere o lote.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+</div><!-- /#appScreen -->
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="firebase-config.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  // Observação: a Etiqueta de Transportadora NÃO usa Firestore de propósito —
+  // os dados preenchidos ficam individuais em cada computador (apenas localStorage),
+  // diferente do Protocolo de Coleta que sincroniza em nuvem.
+  const app = initializeApp(window.FIREBASE_CONFIG);
+  const auth = getAuth(app);
+
+  const loginScreen = document.getElementById('loginScreen');
+  const appScreen = document.getElementById('appScreen');
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+  const loginBtn = document.getElementById('loginBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  onAuthStateChanged(auth, (user)=>{
+    if(user){
+      loginScreen.style.display = 'none';
+      appScreen.style.display = 'contents';
+      logoutBtn.style.display = 'inline-block';
+    } else {
+      loginScreen.style.display = 'flex';
+      appScreen.style.display = 'none';
+      logoutBtn.style.display = 'none';
+    }
+  });
+
+  loginForm.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    loginError.textContent = '';
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Entrando...';
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    signInWithEmailAndPassword(auth, email, password)
+      .catch((err)=>{
+        loginError.textContent = 'E-mail ou senha inválidos.';
+        console.error(err);
+      })
+      .finally(()=>{
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Entrar';
+      });
+  });
+
+  logoutBtn.addEventListener('click', ()=> signOut(auth));
+</script>
+
+<script src="etiqueta-script.js"></script>
+</body>
+</html>

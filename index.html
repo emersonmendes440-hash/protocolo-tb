@@ -71,6 +71,7 @@
     border:1px solid var(--line);background:var(--panel-2);color:var(--ink);transition:all .2s ease;
   }
   .nav-links a:hover{border-color:#3d4356;transform:translateY(-1px);}
+  .nav-links a.active{background:var(--accent);border-color:var(--accent);color:#fff;}
   .logout-btn{
     font-size:12px;font-weight:700;padding:8px 13px;border-radius:9px;cursor:pointer;
     border:1px solid var(--line);background:var(--panel-2);color:var(--ink);transition:all .2s ease;
@@ -433,6 +434,10 @@
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div class="nav-links">
+        <a href="index.html" class="active">Protocolo de Coleta</a>
+        <a href="etiqueta.html">Etiqueta de Transportadora</a>
+      </div>
       <div class="status-pill" id="statusPill"><span class="dot"></span>Jamef</div>
       <button id="logoutBtn" class="logout-btn" style="display:none;">Sair</button>
     </div>

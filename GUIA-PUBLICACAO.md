@@ -41,4 +41,4 @@ Se precisar de ajuda para mudar alguma coisa maior no design ou nas funções do
 - Abra o link do site, faça login com seu e-mail e senha.
 - Escolha a transportadora, preencha as notas fiscais e o responsável.
 - Aperte **Ctrl+P** (ou o botão de imprimir) — sai a folha da transportadora e a folha da empresa, cada uma numa página.
-- As notas ficam salvas no navegador até você limpar a lista daquela transportadora.
+- As notas ficam salvas na nuvem: se alguém adicionar uma NF em um computador, ela aparece automaticamente nos outros computadores, para qualquer pessoa logada. A lista de cada transportadora só some quando alguém aperta "Limpar lista desta transportadora".

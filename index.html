@@ -376,6 +376,19 @@
       text-align:center;font-size:9px;color:#999;padding:12px 24px 18px;border-top:1.5px solid #f0f0f0;line-height:1.5;
     }
     .lbl-footer-addr svg{width:11px;height:11px;flex-shrink:0;color:#bbb;}
+
+    /* ---- aviso quando falta preencher algo ---- */
+    .print-warning{
+      min-height:271mm;display:flex;flex-direction:column;align-items:center;justify-content:center;
+      text-align:center;padding:40px;border:1.5px dashed #ccc;border-radius:20px;text-transform:none;
+    }
+    .print-warning .pw-icon{
+      width:56px;height:56px;border-radius:16px;background:#f0f0f0;color:#111;
+      display:flex;align-items:center;justify-content:center;margin-bottom:18px;
+    }
+    .print-warning .pw-icon svg{width:30px;height:30px;}
+    .print-warning h2{margin:0 0 10px;font-size:20px;color:#181818;}
+    .print-warning p{margin:4px 0;color:#666;font-size:13px;max-width:420px;}
   }
 
   @media (max-width:640px){
@@ -661,6 +674,45 @@
     }, 500);
   }
 
+  // Enquanto a pessoa está digitando numa nota/responsável, uma atualização
+  // vinda da nuvem (inclusive o eco confirmado da própria digitação) não pode
+  // reconstruir a tabela na hora — isso rouba o foco e corta o que tava sendo
+  // digitado. Então guardamos a atualização e só aplicamos quando o campo
+  // perde o foco de verdade (não quando é só um Tab pro campo ao lado).
+  let editingKey = null;
+  const pendingRemoteState = {};
+  const EDITABLE_SELECTOR = '.nf-input, .vol-input, #responsavelInput';
+
+  function applyRemoteState(key, incoming){
+    state[key] = incoming;
+    storageSet(state);
+    updateCounts();
+    if(key === currentCarrier){
+      loadCarrierUI();
+    }
+  }
+
+  document.addEventListener('focusin', (e)=>{
+    if(e.target.matches && e.target.matches(EDITABLE_SELECTOR)){
+      editingKey = currentCarrier;
+    }
+  });
+  document.addEventListener('focusout', (e)=>{
+    if(!(e.target.matches && e.target.matches(EDITABLE_SELECTOR))) return;
+    setTimeout(()=>{
+      const active = document.activeElement;
+      const stillEditing = active && active.matches && active.matches(EDITABLE_SELECTOR);
+      if(stillEditing) return; // só trocou de campo (ex: Tab), continua editando
+      const key = editingKey;
+      editingKey = null;
+      if(key && pendingRemoteState[key]){
+        const incoming = pendingRemoteState[key];
+        delete pendingRemoteState[key];
+        applyRemoteState(key, incoming);
+      }
+    }, 50);
+  });
+
   function initCloudSync(){
     if(cloudSyncStarted || !window.__cloud) return;
     cloudSyncStarted = true;
@@ -675,12 +727,12 @@
           responsavel: data.responsavel || ''
         };
         if(JSON.stringify(incoming) === JSON.stringify(state[key])) return; // nada mudou de fato
-        state[key] = incoming;
-        storageSet(state);
-        updateCounts();
-        if(key === currentCarrier){
-          loadCarrierUI();
+
+        if(editingKey === key){
+          pendingRemoteState[key] = incoming; // aplica só quando sair do campo
+          return;
         }
+        applyRemoteState(key, incoming);
       }, (err)=>{
         console.error('Erro ao ouvir atualizações da nuvem:', err);
       });
@@ -824,11 +876,37 @@
     return 'NF-' + v;
   }
 
+  let lastPrintWasValid = false;
+
   function buildPrintArea(){
     const c = carriers[currentCarrier];
+    const rows = state[currentCarrier].rows.filter(r=> (r.nf||'').trim());
+    const responsavelPreenchido = (state[currentCarrier].responsavel || '').trim();
+
+    // Segurança extra: além da validação no botão "Imprimir", o navegador
+    // permite disparar a impressão pelo atalho Ctrl+P sem passar por ela.
+    // Isso não dá pra bloquear 100% em todo navegador, então garantimos que,
+    // mesmo se a janela de impressão abrir, o que sai no papel é um aviso —
+    // nunca um protocolo incompleto sem responsável ou sem nenhuma NF.
+    if(rows.length === 0 || !responsavelPreenchido){
+      lastPrintWasValid = false;
+      const motivo = rows.length === 0
+        ? 'nenhuma nota fiscal foi preenchida'
+        : 'o nome do responsável pela entrega não foi preenchido';
+      document.getElementById('printArea').innerHTML = `
+        <div class="print-warning">
+          <div class="pw-icon">${ICON.protocol}</div>
+          <h2>Não é possível imprimir</h2>
+          <p>Para <b>${c.name}</b>, ${motivo}.</p>
+          <p>Volte à tela do protocolo, preencha os dados e use o botão "Imprimir protocolo".</p>
+        </div>
+      `;
+      return;
+    }
+    lastPrintWasValid = true;
+
     const data = todayBR(); // sempre a data do dia da impressão, não editável
     const responsavel = state[currentCarrier].responsavel || '—';
-    const rows = state[currentCarrier].rows.filter(r=> (r.nf||'').trim());
     const total = rows.reduce((s,r)=> s + (parseInt(r.vol,10)||0), 0);
 
     const copyHTML = (viaLabel, viaN)=> {
@@ -916,15 +994,16 @@
   window.addEventListener('beforeprint', buildPrintArea);
   window.addEventListener('afterprint', ()=>{
     // limpa o responsável depois da impressão, assim o próximo protocolo
-    // não começa com o nome da entrega anterior
-    if(state[currentCarrier].responsavel){
+    // não começa com o nome da entrega anterior — só quando a impressão
+    // realmente saiu (não quando foi bloqueada por faltar algo)
+    if(lastPrintWasValid && state[currentCarrier].responsavel){
       state[currentCarrier].responsavel = '';
       responsavelInput.value = '';
       persist();
     }
   });
 
-  document.getElementById('printBtn').addEventListener('click', ()=>{
+  function tryPrint(){
     const anyNF = state[currentCarrier].rows.some(r=> (r.nf||'').trim());
     if(!anyNF){
       showToast('Preencha ao menos uma nota fiscal antes de imprimir.');
@@ -939,7 +1018,9 @@
       return;
     }
     window.print();
-  });
+  }
+
+  document.getElementById('printBtn').addEventListener('click', tryPrint);
 
   // init
   loadCarrierUI();

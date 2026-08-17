@@ -196,13 +196,6 @@
   }
   .totals .value.pulse{animation:pop .3s ease;}
 
-  /* ---------- Signature preview block ---------- */
-  .sign-block{
-    margin-top:22px;padding:16px 18px;background:var(--bg1);border-radius:12px;border:1px solid var(--line);
-    font-size:12.5px;color:var(--muted);line-height:2;
-  }
-  .sign-block b{color:var(--ink);}
-
   /* ---------- Actions ---------- */
   .actions{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;}
   .btn{
@@ -264,33 +257,25 @@
 
     /* ---- cabeçalho ---- */
     .lbl-head{
-      background:#111318;color:#fff;padding:16px 22px;
-      display:flex;align-items:center;justify-content:space-between;gap:14px;
-      background-image:radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);
-      background-size:12px 12px;
+      background:linear-gradient(155deg,#181c26,#0a0b10);color:#fff;padding:22px 26px;
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      border-bottom:3px solid #111;
     }
-    .lbl-head-left{display:flex;align-items:center;gap:12px;}
+    .lbl-head-left{display:flex;align-items:center;gap:14px;}
     .lbl-head-icon{
-      width:40px;height:40px;border-radius:12px;background:#fff;flex-shrink:0;
+      width:46px;height:46px;border-radius:13px;background:#fff;flex-shrink:0;
       display:flex;align-items:center;justify-content:center;color:#111;
-      box-shadow:0 0 0 1.5px rgba(255,255,255,.15);
+      box-shadow:0 6px 16px -6px rgba(0,0,0,.5);
     }
-    .lbl-head-icon svg{width:22px;height:22px;}
-    .lbl-head .lbl-title{font-size:15.5px;font-weight:800;letter-spacing:.6px;}
-    .lbl-head .lbl-sub{font-size:9px;color:rgba(255,255,255,.6);letter-spacing:1px;margin-top:3px;}
-    .lbl-via{
-      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
-      border-radius:13px;padding:7px 8px 7px 12px;text-align:left;display:flex;align-items:center;gap:10px;
-    }
+    .lbl-head-icon svg{width:25px;height:25px;}
+    .lbl-head .lbl-title{font-size:18px;font-weight:800;letter-spacing:.3px;}
+    .lbl-head .lbl-sub{font-size:9.5px;color:rgba(255,255,255,.55);letter-spacing:1.4px;margin-top:4px;font-weight:600;}
+    .lbl-via{text-align:right;line-height:1.1;}
     .lbl-via .vtag{
-      display:flex;align-items:center;gap:5px;
-      font-size:7.5px;letter-spacing:.8px;color:rgba(255,255,255,.65);line-height:1.3;
+      font-size:8.5px;letter-spacing:1.4px;color:rgba(255,255,255,.5);font-weight:700;margin-bottom:5px;
     }
-    .lbl-via .vtag svg{width:10px;height:10px;flex-shrink:0;}
-    .lbl-via .n{
-      font-size:14px;font-weight:800;line-height:1;color:#111;background:#fff;
-      border-radius:999px;padding:6px 13px;
-    }
+    .lbl-via .n{font-size:23px;font-weight:800;color:#fff;}
+    .lbl-via .n small{font-size:13px;font-weight:600;color:rgba(255,255,255,.45);}
 
     /* ---- transportadora / empresa ---- */
     .lbl-carrier-row{
@@ -351,7 +336,7 @@
     /* ---- total ---- */
     .lbl-total-card{
       display:flex;align-items:center;gap:12px;
-      margin:14px 24px 20px;padding:13px 18px;border:2px solid #111;border-radius:14px;
+      margin:0 24px 14px;padding:13px 18px;border:2px solid #111;border-radius:14px;
       page-break-inside:avoid;
     }
     .lbl-total-card .tt-icon{
@@ -493,11 +478,6 @@
       <span class="value" id="totalValue">0</span>
     </div>
 
-    <div class="sign-block">
-      <b>Recebido em perfeito estado</b> em ___/___/___ &nbsp;&nbsp; Horário: ______________<br>
-      <b>Nome:</b> ______________________________________ &nbsp;&nbsp; <b>Assinatura:</b> ______________________________________
-    </div>
-
     <div class="actions">
       <button class="btn btn-primary" id="printBtn">🖨️ Imprimir protocolo (2 folhas)</button>
       <button class="btn btn-ghost" id="clearBtn">Limpar lista desta transportadora</button>
@@ -582,7 +562,8 @@
     check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>',
     pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.2 7-12a7 7 0 10-14 0c0 4.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>',
     globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg>',
-    doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></svg>'
+    doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></svg>',
+    protocol: '<svg viewBox="0 0 24 24" width="25" height="25" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="4" width="14" height="17" rx="2" stroke="currentColor" stroke-width="2"/><rect x="9" y="2" width="6" height="3.6" rx="1.2" fill="currentColor"/><path d="M8.4 12.6l2.6 2.6 5-5.6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   };
   const SKYLINE_SVG = '<svg class="sign-deco" viewBox="0 0 600 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" fill="#eee"><rect x="0" y="30" width="30" height="30"/><rect x="34" y="18" width="22" height="42"/><rect x="60" y="34" width="26" height="26"/><rect x="90" y="10" width="20" height="50"/><rect x="114" y="26" width="30" height="34"/><rect x="150" y="20" width="18" height="40"/><path d="M168 60V38l40-14 40 14v22z"/><rect x="256" y="30" width="24" height="30"/><rect x="284" y="16" width="20" height="44"/><rect x="310" y="36" width="28" height="24"/><rect x="342" y="8" width="22" height="52"/><rect x="368" y="28" width="26" height="32"/><rect x="440" y="40" width="70" height="20"/><rect x="446" y="34" width="14" height="10"/><circle cx="460" cy="60" r="6"/><circle cx="494" cy="60" r="6"/><rect x="520" y="24" width="20" height="36"/><rect x="546" y="14" width="24" height="46"/><rect x="576" y="32" width="20" height="28"/></svg>';
   const carriers = {
@@ -802,17 +783,17 @@
       const isEmpresa = viaN === 2;
       return `
       <div class="copy">
-        <div class="lbl-head">
+        <div class="lbl-head" style="border-bottom-color:${c.color};">
           <div class="lbl-head-left">
-            <div class="lbl-head-icon">${ICON.truck}</div>
+            <div class="lbl-head-icon" style="background:linear-gradient(135deg, ${c.color}, ${c.dark});color:#fff;">${ICON.protocol}</div>
             <div>
               <div class="lbl-title">Protocolo de Coleta</div>
               <div class="lbl-sub">TB Comércio de Presentes S.A.</div>
             </div>
           </div>
           <div class="lbl-via">
-            <div class="vtag">${ICON.route} Via — ${viaLabel}</div>
-            <div class="n">${viaN}/2</div>
+            <div class="vtag">Via — ${viaLabel}</div>
+            <div class="n">${viaN}<small>/2</small></div>
           </div>
         </div>
 
@@ -849,13 +830,13 @@
           </table>
         </div>
 
-        <div class="lbl-total-card">
-          <div class="tt-icon">${ICON.box}</div>
-          <span class="tt-label">Total de volumes</span>
-          <span class="tt-value">${total}</span>
-        </div>
-
         <div class="lbl-bottom">
+          <div class="lbl-total-card">
+            <div class="tt-icon">${ICON.box}</div>
+            <span class="tt-label">Total de volumes</span>
+            <span class="tt-value">${total}</span>
+          </div>
+
           <div class="lbl-sign-wrap">
             <div class="lbl-sign">
               <div class="sign-lines">

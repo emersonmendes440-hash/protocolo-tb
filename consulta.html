@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consulta de Protocolos — TB Comércio de Presentes</title>
+<style>
+  :root{
+    --accent:#ff4d5e;
+    --accent-dark:#c4212f;
+    --accent-glow:rgba(255,77,94,0.35);
+    --bg0:#0c0e14;
+    --bg1:#12151d;
+    --panel:#171b25;
+    --panel-2:#1d2230;
+    --ink:#eef0f5;
+    --muted:#8a90a2;
+    --line:#2a2f3d;
+    --radius:18px;
+    --shadow:0 20px 50px -20px rgba(0,0,0,0.6);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    background:
+      radial-gradient(900px 500px at 15% -10%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%),
+      radial-gradient(700px 500px at 100% 10%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%),
+      linear-gradient(180deg,var(--bg0),var(--bg1) 40%,#0a0c11);
+    color:var(--ink);
+    min-height:100vh;
+    padding:34px 18px 90px;
+  }
+  .wrap{max-width:1080px;margin:0 auto;}
+  a{color:inherit;}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:26px;flex-wrap:wrap;gap:14px;animation:fadeDown .6s ease both;
+  }
+  .brand{display:flex;align-items:center;gap:13px;}
+  .brand .logo{
+    width:44px;height:44px;border-radius:12px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+    display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;
+  }
+  .brand h1{font-size:17px;margin:0;line-height:1.3;}
+  .brand span{display:block;font-size:12px;color:var(--muted);font-weight:400;}
+  .nav{display:flex;align-items:center;gap:10px;}
+  .nav a, .nav button{
+    font-size:13px;font-weight:700;padding:9px 16px;border-radius:10px;text-decoration:none;
+    border:1px solid var(--line);background:var(--panel-2);color:var(--ink);cursor:pointer;transition:all .2s ease;
+  }
+  .nav a:hover, .nav button:hover{border-color:#3d4356;}
+  .nav a.active{background:linear-gradient(135deg,var(--accent),var(--accent-dark));border-color:transparent;color:#fff;}
+
+  /* ---------- Login ---------- */
+  #loginScreen{
+    max-width:380px;margin:80px auto 0;background:var(--panel);border:1px solid var(--line);
+    border-radius:var(--radius);padding:32px 28px;box-shadow:var(--shadow);animation:fadeUp .5s ease both;
+  }
+  #loginScreen h2{margin:0 0 6px;font-size:20px;}
+  #loginScreen p{margin:0 0 22px;color:var(--muted);font-size:13px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+  .field input{
+    width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:14px;
+    font-family:inherit;background:var(--bg1);color:var(--ink);transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-glow);}
+  .btn{
+    width:100%;padding:13px 18px;border-radius:12px;border:none;font-size:14.5px;font-weight:700;
+    cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;
+    transition:all .2s ease;box-shadow:0 12px 26px -10px var(--accent-glow);
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn:disabled{opacity:.6;cursor:default;transform:none;}
+  #loginError{color:#ff6b7a;font-size:12.5px;margin-top:12px;min-height:16px;}
+
+  /* ---------- App screen ---------- */
+  #appScreen{display:none;}
+  .filters{
+    display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:22px;
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;
+    animation:fadeUp .5s .05s ease both;
+  }
+  .filters input[type=text]{
+    flex:1;min-width:180px;border:1.5px solid var(--line);border-radius:10px;padding:10px 13px;
+    font-size:14px;font-family:inherit;background:var(--bg1);color:var(--ink);
+  }
+  .filters input[type=text]:focus{outline:none;border-color:var(--accent);}
+  .chip-filter{
+    display:flex;gap:8px;flex-wrap:wrap;
+  }
+  .chip-filter button{
+    border:1.5px solid var(--line);background:var(--panel-2);color:var(--muted);
+    padding:9px 15px;border-radius:999px;font-size:12.5px;font-weight:700;cursor:pointer;transition:all .2s ease;
+  }
+  .chip-filter button.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .chip-filter button:hover{border-color:#3d4356;}
+
+  .result-count{color:var(--muted);font-size:13px;margin-bottom:14px;}
+
+  .grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px;
+  }
+  .scard{
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;
+    transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;animation:fadeUp .4s ease both;
+  }
+  .scard:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#3d4356;}
+  .scard .thumb{width:100%;height:150px;object-fit:cover;background:#0a0c11;display:block;}
+  .scard .body{padding:12px 14px 14px;}
+  .scard .carrier-tag{
+    display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:800;text-transform:uppercase;
+    letter-spacing:.5px;padding:3px 9px;border-radius:999px;margin-bottom:8px;
+  }
+  .scard .resp{font-size:14.5px;font-weight:700;margin:0 0 3px;}
+  .scard .meta{font-size:12px;color:var(--muted);}
+  .scard .nfs{font-size:11.5px;color:var(--muted);margin-top:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+  .empty-state{
+    text-align:center;padding:70px 20px;color:var(--muted);animation:fadeUp .5s ease both;
+  }
+  .empty-state .big{font-size:38px;margin-bottom:10px;}
+
+  /* ---------- Modal ---------- */
+  #modal{
+    display:none;position:fixed;inset:0;background:rgba(6,7,10,0.85);z-index:100;
+    align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(4px);
+  }
+  #modal.show{display:flex;animation:fadeUp .25s ease both;}
+  #modal .modal-card{
+    background:var(--panel);border-radius:18px;max-width:560px;width:100%;max-height:90vh;overflow:auto;
+    border:1px solid var(--line);box-shadow:var(--shadow);
+  }
+  #modal img{width:100%;display:block;background:#0a0c11;}
+  #modal .modal-body{padding:18px 22px 22px;}
+  #modal .modal-body h3{margin:0 0 4px;font-size:18px;}
+  #modal .modal-body .meta-row{font-size:13px;color:var(--muted);margin:3px 0;}
+  #modal .modal-body .meta-row b{color:var(--ink);}
+  #modal .close-btn{
+    position:absolute;top:14px;right:14px;width:34px;height:34px;border-radius:50%;border:none;
+    background:rgba(0,0,0,0.5);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  }
+  #modal .modal-card{position:relative;}
+
+  #loadingState{text-align:center;color:var(--muted);padding:60px 0;}
+
+  footer.company{text-align:center;margin-top:34px;color:var(--muted);font-size:11.5px;line-height:1.7;}
+
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-14px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+  @media(max-width:640px){
+    .topbar{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">TB</div>
+      <div>
+        <h1>Consulta de Protocolos</h1>
+        <span>TB Comércio de Presentes S.A.</span>
+      </div>
+    </div>
+    <div class="nav">
+      <a href="index.html">📋 Protocolo</a>
+      <a class="active" href="consulta.html">🔎 Consulta</a>
+      <a href="scan.html">📷 Scanear</a>
+      <button id="logoutBtn" style="display:none;">Sair</button>
+    </div>
+  </div>
+
+  <!-- ============ LOGIN ============ -->
+  <div id="loginScreen">
+    <h2>Entrar</h2>
+    <p>Acesso restrito à equipe da TB Comércio de Presentes.</p>
+    <form id="loginForm">
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" id="loginEmail" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label>Senha</label>
+        <input type="password" id="loginPassword" autocomplete="current-password" required>
+      </div>
+      <button class="btn" type="submit" id="loginBtn">Entrar</button>
+      <div id="loginError"></div>
+    </form>
+  </div>
+
+  <!-- ============ APP ============ -->
+  <div id="appScreen">
+    <div class="filters">
+      <input type="text" id="searchInput" placeholder="Buscar por responsável ou nota fiscal...">
+      <div class="chip-filter" id="carrierFilter">
+        <button class="active" data-carrier="all">Todas</button>
+        <button data-carrier="jamef">Jamef</button>
+        <button data-carrier="azul">Azul Cargo</button>
+        <button data-carrier="correios">Correios</button>
+      </div>
+    </div>
+
+    <div id="loadingState">Carregando protocolos escaneados…</div>
+    <div class="result-count" id="resultCount" style="display:none;"></div>
+    <div class="grid" id="grid"></div>
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <div class="big">📭</div>
+      Nenhum protocolo escaneado encontrado.<br>
+      Use o <a href="scan.html" style="color:var(--accent);font-weight:700;">app de scan</a> pelo celular pra registrar um.
+    </div>
+  </div>
+
+  <footer class="company">
+    TB — Comércio De Presentes S.A. · Rua Colômbia, 270, Jardim América — São Paulo - SP · CEP: 01438000
+  </footer>
+</div>
+
+<div id="modal">
+  <div class="modal-card">
+    <button class="close-btn" id="closeModalBtn">✕</button>
+    <img id="modalImg" src="" alt="">
+    <div class="modal-body">
+      <h3 id="modalResp"></h3>
+      <div class="meta-row"><b>Transportadora:</b> <span id="modalCarrier"></span></div>
+      <div class="meta-row"><b>Data do registro:</b> <span id="modalDate"></span></div>
+      <div class="meta-row"><b>Notas fiscais:</b> <span id="modalNfs"></span></div>
+    </div>
+  </div>
+</div>
+
+<script src="firebase-config.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const CARRIERS = {
+    jamef:{name:"Jamef", color:"#e42313"},
+    azul:{name:"Azul Cargo Express", color:"#1a3f8b"},
+    correios:{name:"Correios", color:"#f2b705"}
+  };
+
+  const app = initializeApp(window.FIREBASE_CONFIG);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const loginScreen = document.getElementById('loginScreen');
+  const appScreen = document.getElementById('appScreen');
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+  const loginBtn = document.getElementById('loginBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  let allScans = [];
+  let activeCarrier = 'all';
+  let unsubscribe = null;
+
+  onAuthStateChanged(auth, (user) => {
+    if(user){
+      loginScreen.style.display = 'none';
+      appScreen.style.display = 'block';
+      logoutBtn.style.display = 'inline-block';
+      startListening();
+    } else {
+      loginScreen.style.display = 'block';
+      appScreen.style.display = 'none';
+      logoutBtn.style.display = 'none';
+      if(unsubscribe){ unsubscribe(); unsubscribe = null; }
+    }
+  });
+
+  loginForm.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    loginError.textContent = '';
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Entrando...';
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    signInWithEmailAndPassword(auth, email, password)
+      .catch((err)=>{
+        loginError.textContent = 'E-mail ou senha inválidos, ou o Firebase ainda não foi configurado neste site.';
+        console.error(err);
+      })
+      .finally(()=>{
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Entrar';
+      });
+  });
+
+  logoutBtn.addEventListener('click', ()=> signOut(auth));
+
+  function startListening(){
+    const q = query(collection(db, 'scans'), orderBy('createdAt', 'desc'));
+    unsubscribe = onSnapshot(q, (snap)=>{
+      allScans = [];
+      snap.forEach(doc=> allScans.push({ id: doc.id, ...doc.data() }));
+      document.getElementById('loadingState').style.display = 'none';
+      render();
+    }, (err)=>{
+      document.getElementById('loadingState').textContent = 'Não foi possível carregar os dados. Verifique a configuração do Firebase e as regras do Firestore.';
+      console.error(err);
+    });
+  }
+
+  function render(){
+    const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
+    const filtered = allScans.filter(s=>{
+      if(activeCarrier !== 'all' && s.carrier !== activeCarrier) return false;
+      if(searchTerm){
+        const hay = ((s.responsavel||'') + ' ' + (s.nfs||'')).toLowerCase();
+        if(!hay.includes(searchTerm)) return false;
+      }
+      return true;
+    });
+
+    const grid = document.getElementById('grid');
+    const resultCount = document.getElementById('resultCount');
+    const emptyState = document.getElementById('emptyState');
+
+    grid.innerHTML = '';
+    if(filtered.length === 0){
+      resultCount.style.display = 'none';
+      emptyState.style.display = 'block';
+      return;
+    }
+    emptyState.style.display = 'none';
+    resultCount.style.display = 'block';
+    resultCount.textContent = filtered.length + (filtered.length===1 ? ' protocolo encontrado' : ' protocolos encontrados');
+
+    filtered.forEach(s=>{
+      const c = CARRIERS[s.carrier] || {name:s.carrier||'—', color:'#888'};
+      const card = document.createElement('div');
+      card.className = 'scard';
+      const dateStr = s.createdAt && s.createdAt.toDate ? s.createdAt.toDate().toLocaleString('pt-BR') : '—';
+      card.innerHTML = `
+        <img class="thumb" src="${s.photoURL||''}" alt="Protocolo ${c.name}" loading="lazy">
+        <div class="body">
+          <span class="carrier-tag" style="background:${c.color}22;color:${c.color}">${c.name}</span>
+          <p class="resp">${s.responsavel || 'Sem nome'}</p>
+          <div class="meta">${dateStr}</div>
+          ${s.nfs ? `<div class="nfs">NFs: ${s.nfs}</div>` : ''}
+        </div>
+      `;
+      card.addEventListener('click', ()=> openModal(s, c, dateStr));
+      grid.appendChild(card);
+    });
+  }
+
+  function openModal(s, c, dateStr){
+    document.getElementById('modalImg').src = s.photoURL || '';
+    document.getElementById('modalResp').textContent = s.responsavel || 'Sem nome';
+    document.getElementById('modalCarrier').textContent = c.name;
+    document.getElementById('modalDate').textContent = dateStr;
+    document.getElementById('modalNfs').textContent = s.nfs || '—';
+    document.getElementById('modal').classList.add('show');
+  }
+  document.getElementById('closeModalBtn').addEventListener('click', ()=>{
+    document.getElementById('modal').classList.remove('show');
+  });
+  document.getElementById('modal').addEventListener('click', (e)=>{
+    if(e.target.id === 'modal') document.getElementById('modal').classList.remove('show');
+  });
+
+  document.getElementById('searchInput').addEventListener('input', render);
+  document.querySelectorAll('#carrierFilter button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('#carrierFilter button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCarrier = btn.dataset.carrier;
+      render();
+    });
+  });
+</script>
+
+</body>
+</html>

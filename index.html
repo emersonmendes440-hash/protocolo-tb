@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protocolo de Coleta — TB Comércio de Presentes</title>
+<style>
+  :root{
+    --accent:#ff4d5e;
+    --accent-dark:#c4212f;
+    --accent-glow:rgba(255,77,94,0.35);
+    --bg0:#0c0e14;
+    --bg1:#12151d;
+    --panel:#171b25;
+    --panel-2:#1d2230;
+    --ink:#eef0f5;
+    --muted:#8a90a2;
+    --line:#2a2f3d;
+    --radius:18px;
+    --shadow:0 20px 50px -20px rgba(0,0,0,0.6);
+    --shadow-soft:0 8px 20px -10px rgba(0,0,0,0.5);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+    background:
+      radial-gradient(900px 500px at 15% -10%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%),
+      radial-gradient(700px 500px at 100% 10%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%),
+      linear-gradient(180deg,var(--bg0),var(--bg1) 40%,#0a0c11);
+    color:var(--ink);
+    min-height:100vh;
+    padding:34px 18px 90px;
+    transition:background 0.7s ease;
+  }
+
+  .wrap{max-width:980px;margin:0 auto;}
+
+  /* ---------- Top bar / brand ---------- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:28px;flex-wrap:wrap;gap:14px;
+    animation:fadeDown .6s ease both;
+  }
+  .brand{display:flex;align-items:center;gap:13px;}
+  .brand .logo{
+    width:48px;height:48px;border-radius:13px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-dark));
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:800;font-size:18px;
+    box-shadow:0 10px 24px -8px var(--accent-glow);
+    transition:background .6s ease, box-shadow .6s ease;
+  }
+  .brand h1{font-size:17px;margin:0;line-height:1.3;color:var(--ink);}
+  .brand span{display:block;font-size:12px;color:var(--muted);font-weight:400;}
+
+  .status-pill{
+    font-size:12px;color:var(--ink);background:var(--panel-2);
+    padding:7px 14px;border-radius:999px;font-weight:600;
+    border:1px solid var(--line);display:flex;align-items:center;gap:8px;
+    transition:all .5s ease;
+  }
+  .status-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px 2px var(--accent-glow);transition:all .5s ease;}
+  .nav-links{display:flex;gap:8px;}
+  .nav-links a{
+    font-size:12px;font-weight:700;padding:8px 13px;border-radius:9px;text-decoration:none;
+    border:1px solid var(--line);background:var(--panel-2);color:var(--ink);transition:all .2s ease;
+  }
+  .nav-links a:hover{border-color:#3d4356;transform:translateY(-1px);}
+  .logout-btn{
+    font-size:12px;font-weight:700;padding:8px 13px;border-radius:9px;cursor:pointer;
+    border:1px solid var(--line);background:var(--panel-2);color:var(--ink);transition:all .2s ease;
+  }
+  .logout-btn:hover{border-color:#3d4356;transform:translateY(-1px);}
+
+  /* ---------- Login gate ---------- */
+  #appScreen{display:none;}
+  #loginScreen{
+    max-width:380px;margin:80px auto 0;background:var(--panel);border:1px solid var(--line);
+    border-radius:var(--radius);padding:32px 28px;box-shadow:var(--shadow);animation:fadeUp .5s ease both;
+  }
+  #loginScreen h2{margin:0 0 6px;font-size:20px;color:var(--ink);}
+  #loginScreen p{margin:0 0 22px;color:var(--muted);font-size:13px;}
+  #loginError{color:#ff6b7a;font-size:12.5px;margin-top:12px;min-height:16px;}
+
+  /* ---------- Carrier tabs ---------- */
+  .carriers{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;
+    animation:fadeUp .6s .05s ease both;
+  }
+  .carrier-btn{
+    position:relative;cursor:pointer;border:1.5px solid var(--line);
+    background:var(--panel);border-radius:15px;padding:16px 10px 15px;
+    text-align:center;transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease, background .25s ease;
+    display:flex;flex-direction:column;align-items:center;gap:9px;
+    user-select:none;
+  }
+  .carrier-btn:hover{transform:translateY(-3px);border-color:color-mix(in srgb, var(--c) 60%, var(--line));}
+  .carrier-btn .logo-chip{
+    width:100%;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    background:#ffffff;padding:6px 12px;transition:transform .3s ease;
+  }
+  .carrier-btn .logo-chip img{max-width:100%;max-height:100%;object-fit:contain;}
+  .carrier-btn small{color:var(--muted);font-size:11px;}
+  .carrier-btn .count{
+    font-size:10.5px;color:var(--muted);background:var(--panel-2);padding:2px 8px;border-radius:999px;margin-top:1px;
+  }
+  .carrier-btn.active{border-color:var(--c);background:linear-gradient(180deg, color-mix(in srgb, var(--c) 14%, var(--panel)), var(--panel));box-shadow:0 10px 26px -12px var(--c);}
+  .carrier-btn.active .logo-chip{transform:scale(1.04);box-shadow:0 0 0 3px color-mix(in srgb, var(--c) 35%, transparent);}
+  .carrier-btn.active::after{
+    content:"✓";position:absolute;top:-9px;right:-9px;width:23px;height:23px;
+    border-radius:50%;background:var(--c);color:#fff;font-size:12px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 0 3px var(--panel), 0 4px 10px -2px rgba(0,0,0,.5);
+    animation:pop .3s ease;
+  }
+
+  /* ---------- Card ---------- */
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:28px 26px 24px;position:relative;overflow:hidden;
+    animation:fadeUp .6s .1s ease both;
+  }
+  .card::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:4px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-dark));
+    transition:background .5s ease;
+  }
+
+  .card-head{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;margin-bottom:6px;}
+  .card-head h2{margin:0;font-size:22px;letter-spacing:.3px;color:var(--ink);}
+  .card-head p{margin:4px 0 0;color:var(--muted);font-size:13px;}
+  .save-indicator{font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:6px;opacity:0;transition:opacity .3s ease;}
+  .save-indicator.show{opacity:1;}
+  .save-indicator .dot2{width:6px;height:6px;border-radius:50%;background:#4ade80;}
+
+  .field-row{display:flex;gap:16px;flex-wrap:wrap;margin:18px 0 6px;}
+  .field{flex:1;min-width:160px;}
+  .field label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+  .field input{
+    width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;
+    font-size:14px;font-family:inherit;transition:border-color .2s ease, box-shadow .2s ease;
+    background:var(--bg1);color:var(--ink);
+  }
+  .field input::placeholder{color:#565c6e;}
+  .field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-glow);}
+  .field input[readonly]{color:var(--muted);cursor:default;background:var(--panel-2);}
+  .field input[readonly]:focus{box-shadow:none;border-color:var(--line);}
+  .field input.field-error{border-color:#ff4d5e;animation:shake .4s ease;}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-4px);}75%{transform:translateX(4px);}}
+
+  /* ---------- Table ---------- */
+  table.nf-table{width:100%;border-collapse:collapse;margin-top:18px;}
+  table.nf-table thead th{
+    text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.6px;
+    color:var(--muted);padding:0 8px 8px;border-bottom:2px solid var(--line);
+  }
+  table.nf-table thead th.vol-col{text-align:center;width:110px;}
+  table.nf-table thead th.act-col{width:44px;}
+  .nf-row td{padding:6px 8px;border-bottom:1px solid var(--line);}
+  .nf-row{animation:slideIn .35s ease both;}
+  .nf-row input{
+    width:100%;border:1.5px solid var(--line);border-radius:8px;padding:9px 10px;
+    font-size:14px;font-family:inherit;background:var(--bg1);color:var(--ink);transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  .nf-row input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-glow);}
+  .nf-row .vol-input{text-align:center;}
+  .remove-btn{
+    width:30px;height:30px;border-radius:8px;border:none;background:transparent;color:#565c6e;
+    cursor:pointer;font-size:16px;transition:all .2s ease;display:flex;align-items:center;justify-content:center;margin:auto;
+  }
+  .remove-btn:hover{background:rgba(255,77,94,0.15);color:#ff6b7a;transform:rotate(90deg);}
+
+  .add-row{
+    display:flex;align-items:center;gap:8px;margin-top:14px;cursor:pointer;
+    color:var(--accent);font-weight:700;font-size:13.5px;background:color-mix(in srgb, var(--accent) 10%, var(--panel));
+    border:1.5px dashed color-mix(in srgb, var(--accent) 55%, var(--line));border-radius:10px;padding:12px 14px;justify-content:center;
+    transition:all .2s ease;
+  }
+  .add-row:hover{background:var(--accent);color:#fff;border-style:solid;}
+  .add-row .plus{font-size:16px;line-height:1;}
+
+  /* ---------- Totals ---------- */
+  .totals{
+    display:flex;justify-content:flex-end;align-items:center;gap:12px;margin-top:20px;
+    padding-top:16px;border-top:2px solid var(--line);
+  }
+  .totals .label{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700;}
+  .totals .value{
+    font-size:32px;font-weight:800;color:var(--accent);min-width:56px;text-align:center;
+    transition:transform .15s ease;text-shadow:0 0 24px var(--accent-glow);
+  }
+  .totals .value.pulse{animation:pop .3s ease;}
+
+  /* ---------- Signature preview block ---------- */
+  .sign-block{
+    margin-top:22px;padding:16px 18px;background:var(--bg1);border-radius:12px;border:1px solid var(--line);
+    font-size:12.5px;color:var(--muted);line-height:2;
+  }
+  .sign-block b{color:var(--ink);}
+
+  /* ---------- Actions ---------- */
+  .actions{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;}
+  .btn{
+    flex:1;min-width:180px;padding:14px 18px;border-radius:12px;border:none;font-size:14.5px;font-weight:700;
+    cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s ease;
+    letter-spacing:.2px;
+  }
+  .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;box-shadow:0 12px 26px -10px var(--accent-glow);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 30px -10px var(--accent-glow);}
+  .btn-primary:active{transform:translateY(0);}
+  .btn-ghost{background:var(--panel-2);color:var(--muted);border:1.5px solid var(--line);}
+  .btn-ghost:hover{border-color:#3d4356;color:var(--ink);}
+
+  footer.company{
+    text-align:center;margin-top:26px;color:var(--muted);font-size:11.5px;line-height:1.7;
+    animation:fadeUp .6s .15s ease both;
+  }
+
+  /* ---------- Animations ---------- */
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-14px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes slideIn{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:translateX(0);}}
+  @keyframes pop{0%{transform:scale(1);}40%{transform:scale(1.25);}100%{transform:scale(1);}}
+  @keyframes toastIn{from{opacity:0;transform:translate(-50%,12px);}to{opacity:1;transform:translate(-50%,0);}}
+
+  /* ---------- Toast ---------- */
+  #toast{
+    position:fixed;left:50%;bottom:26px;transform:translateX(-50%);
+    background:var(--panel-2);border:1px solid var(--line);color:var(--ink);padding:12px 22px;border-radius:999px;font-size:13.5px;
+    box-shadow:0 16px 34px -12px rgba(0,0,0,0.6);opacity:0;pointer-events:none;z-index:50;
+  }
+  #toast.show{animation:toastIn .35s ease forwards;opacity:1;}
+
+  /* ==========================================================
+     PRINT — layout inspirado em etiqueta de transportadora
+     ========================================================== */
+  .print-only{display:none;}
+
+  @media print{
+    @page{ margin:12mm; }
+    *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color-adjust:exact !important; }
+    body{background:#fff;padding:0;margin:0;}
+    .topbar,.carriers,.add-row,.actions,#toast,#loginScreen{display:none !important;}
+    #appScreen{display:block !important;}
+    .card{box-shadow:none;border-radius:0;padding:0;border:none;}
+    .card::before{display:none;}
+    .print-only{display:block;}
+    .screen-only{display:none !important;}
+
+    .copy{
+      page-break-after:always;
+      border:1.5px solid #111;border-radius:20px;overflow:hidden;
+      font-family:'Segoe UI', Arial, sans-serif;color:#181818;
+      background:#fff;text-transform:uppercase;
+      display:flex;flex-direction:column;min-height:271mm;
+    }
+    .copy:last-child{page-break-after:auto;}
+    .lbl-bottom{margin-top:auto;}
+
+    /* ---- cabeçalho ---- */
+    .lbl-head{
+      background:#111318;color:#fff;padding:16px 22px;
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+      background-image:radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);
+      background-size:12px 12px;
+    }
+    .lbl-head-left{display:flex;align-items:center;gap:12px;}
+    .lbl-head-icon{
+      width:40px;height:40px;border-radius:12px;background:#fff;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;color:#111;
+      box-shadow:0 0 0 1.5px rgba(255,255,255,.15);
+    }
+    .lbl-head-icon svg{width:22px;height:22px;}
+    .lbl-head .lbl-title{font-size:15.5px;font-weight:800;letter-spacing:.6px;}
+    .lbl-head .lbl-sub{font-size:9px;color:rgba(255,255,255,.6);letter-spacing:1px;margin-top:3px;}
+    .lbl-via{
+      background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+      border-radius:13px;padding:7px 8px 7px 12px;text-align:left;display:flex;align-items:center;gap:10px;
+    }
+    .lbl-via .vtag{
+      display:flex;align-items:center;gap:5px;
+      font-size:7.5px;letter-spacing:.8px;color:rgba(255,255,255,.65);line-height:1.3;
+    }
+    .lbl-via .vtag svg{width:10px;height:10px;flex-shrink:0;}
+    .lbl-via .n{
+      font-size:14px;font-weight:800;line-height:1;color:#111;background:#fff;
+      border-radius:999px;padding:6px 13px;
+    }
+
+    /* ---- transportadora / empresa ---- */
+    .lbl-carrier-row{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:18px 24px;background:#fafafa;border-bottom:1.5px solid #eee;
+    }
+    .lbl-carrier-row .carrier-logo-box{
+      background:#fff;border:1.5px solid #e2e2e2;border-radius:12px;padding:9px 18px;
+      display:flex;align-items:center;justify-content:center;height:50px;
+    }
+    .lbl-carrier-row .carrier-logo-box img{max-height:32px;max-width:170px;object-fit:contain;}
+    .lbl-carrier-row .company-block{text-align:right;font-size:10.5px;line-height:1.6;color:#555;}
+    .lbl-carrier-row .company-block .cb-name{
+      display:flex;align-items:center;justify-content:flex-end;gap:5px;font-size:12.5px;font-weight:800;color:#181818;margin-bottom:1px;
+    }
+    .lbl-carrier-row .company-block .cb-name svg{width:12px;height:12px;flex-shrink:0;}
+
+    /* ---- grade de info ---- */
+    .lbl-info-grid{display:grid;grid-template-columns:1fr 1fr 1fr;border-bottom:1.5px solid #eee;}
+    .lbl-info-grid .info-cell{padding:14px 18px;border-right:1.5px solid #eee;}
+    .lbl-info-grid .info-cell:last-child{border-right:none;}
+    .lbl-info-grid .info-cell .ic-label{
+      font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#999;font-weight:700;
+      display:flex;align-items:center;gap:5px;margin-bottom:5px;
+    }
+    .lbl-info-grid .info-cell .ic-label svg{width:12px;height:12px;color:#111;}
+    .lbl-info-grid .info-cell .ic-value{font-size:14.5px;font-weight:800;color:#181818;}
+
+    /* ---- notas fiscais ---- */
+    .lbl-section-title{
+      display:flex;align-items:center;gap:6px;
+      font-size:10px;text-transform:uppercase;letter-spacing:1.1px;color:#999;font-weight:700;margin:18px 24px 8px;
+    }
+    .lbl-section-title svg{width:13px;height:13px;color:#999;}
+    .lbl-table-card{
+      margin:0 24px;border:1.5px solid #e2e2e2;border-radius:14px;overflow:hidden;
+    }
+    table.lbl-table{width:100%;border-collapse:collapse;}
+    table.lbl-table thead th{
+      text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.6px;color:#fff;
+      background:#111;padding:9px 16px;
+    }
+    table.lbl-table thead th.vc{text-align:center;width:110px;}
+    table.lbl-table thead th.cc{text-align:center;width:70px;}
+    table.lbl-table tbody td{padding:12px 16px;border-top:1px solid #eee;font-size:16px;font-weight:800;color:#181818;}
+    table.lbl-table tbody tr:first-child td{border-top:none;}
+    table.lbl-table tbody td.vc{text-align:center;}
+    table.lbl-table tbody td.cc{text-align:center;}
+    table.lbl-table tbody tr:nth-child(even){background:#fafafa;}
+    .vc-badge{
+      display:inline-flex;align-items:center;justify-content:center;min-width:34px;
+      padding:4px 10px;border-radius:8px;background:#eee;color:#181818;font-weight:800;font-size:14px;
+    }
+    .check-box{
+      display:inline-block;width:18px;height:18px;border:2px solid #111;border-radius:5px;
+    }
+
+    /* ---- total ---- */
+    .lbl-total-card{
+      display:flex;align-items:center;gap:12px;
+      margin:14px 24px 20px;padding:13px 18px;border:2px solid #111;border-radius:14px;
+      page-break-inside:avoid;
+    }
+    .lbl-total-card .tt-icon{
+      width:34px;height:34px;border-radius:50%;background:#f0f0f0;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;color:#111;
+    }
+    .lbl-total-card .tt-icon svg{width:17px;height:17px;}
+    .lbl-total-card .tt-label{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#777;font-weight:700;}
+    .lbl-total-card .tt-value{font-size:22px;font-weight:800;color:#111;margin-left:auto;}
+
+    /* ---- assinatura ---- */
+    .lbl-sign-wrap{display:flex;gap:12px;margin:0 24px 18px;page-break-inside:avoid;}
+    .lbl-sign{
+      flex:1;padding:16px 20px;border:1.5px solid #eee;border-radius:16px;
+      font-size:12.5px;line-height:2.3;color:#333;position:relative;overflow:hidden;
+    }
+    .lbl-sign .sign-top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+    .lbl-sign .sign-check{
+      width:19px;height:19px;border-radius:50%;background:#111;color:#fff;flex-shrink:0;
+      display:inline-flex;align-items:center;justify-content:center;
+    }
+    .lbl-sign .sign-check svg{width:11px;height:11px;}
+    .lbl-sign b{color:#181818;}
+    .lbl-sign .sign-lines{position:relative;z-index:1;}
+    .lbl-sign .sign-deco{
+      position:absolute;left:0;right:0;bottom:0;height:34px;opacity:.5;pointer-events:none;
+    }
+    .lbl-stamp{
+      width:140px;flex-shrink:0;border:1.5px dashed #ccc;border-radius:16px;
+      display:flex;align-items:center;justify-content:center;text-align:center;
+      font-size:9.5px;text-transform:uppercase;letter-spacing:.8px;color:#bbb;font-weight:700;padding:10px;
+    }
+
+    /* ---- rodapé ---- */
+    .lbl-footer-addr{
+      display:flex;align-items:center;justify-content:center;gap:6px;
+      text-align:center;font-size:9px;color:#999;padding:12px 24px 18px;border-top:1.5px solid #f0f0f0;line-height:1.5;
+    }
+    .lbl-footer-addr svg{width:11px;height:11px;flex-shrink:0;color:#bbb;}
+  }
+
+  @media (max-width:640px){
+    .carriers{grid-template-columns:1fr;}
+    .totals{justify-content:space-between;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ============ LOGIN ============ -->
+  <div id="loginScreen">
+    <h2>Entrar</h2>
+    <p>Acesso restrito à equipe da TB Comércio de Presentes.</p>
+    <form id="loginForm">
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" id="loginEmail" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label>Senha</label>
+        <input type="password" id="loginPassword" autocomplete="current-password" required>
+      </div>
+      <button class="btn btn-primary" type="submit" id="loginBtn" style="width:100%;">Entrar</button>
+      <div id="loginError"></div>
+    </form>
+  </div>
+
+  <!-- ============ APP (só aparece depois do login) ============ -->
+  <div id="appScreen">
+
+  <div class="topbar screen-only">
+    <div class="brand">
+      <div class="logo" id="logoBox">TB</div>
+      <div>
+        <h1>Protocolo de Coleta<span>TB Comércio de Presentes S.A.</span></h1>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <div class="status-pill" id="statusPill"><span class="dot"></span>Jamef</div>
+      <div class="nav-links">
+        <a href="consulta.html">🔎 Consulta</a>
+        <a href="scan.html">📷 Scanear</a>
+      </div>
+      <button id="logoutBtn" class="logout-btn" style="display:none;">Sair</button>
+    </div>
+  </div>
+
+  <div class="carriers screen-only" id="carrierTabs">
+    <div class="carrier-btn active" data-carrier="jamef" style="--c:#e42313">
+      <div class="logo-chip"><img src="logos/jamef.png" alt="Jamef"></div>
+      <small>Transporte rodoviário</small>
+      <span class="count" id="count-jamef">0 NFs</span>
+    </div>
+    <div class="carrier-btn" data-carrier="azul" style="--c:#1a3f8b">
+      <div class="logo-chip"><img src="logos/azul.png" alt="Azul Cargo Express"></div>
+      <small>Transporte aéreo</small>
+      <span class="count" id="count-azul">0 NFs</span>
+    </div>
+    <div class="carrier-btn" data-carrier="correios" style="--c:#f2b705">
+      <div class="logo-chip"><img src="logos/correios.png" alt="Correios"></div>
+      <small>Encomendas / PAC-SEDEX</small>
+      <span class="count" id="count-correios">0 NFs</span>
+    </div>
+  </div>
+
+  <div class="card screen-only">
+    <div class="card-head">
+      <div>
+        <h2 id="cardTitle">Protocolo de Coleta — Jamef</h2>
+        <p>As notas ficam salvas neste navegador até você imprimir e limpar.</p>
+      </div>
+      <div class="save-indicator" id="saveIndicator"><span class="dot2"></span>Salvo</div>
+    </div>
+
+    <div class="field-row">
+      <div class="field" style="max-width:220px;">
+        <label>Data (automática)</label>
+        <input type="text" id="dataInput" value="" readonly>
+      </div>
+      <div class="field" style="max-width:260px;">
+        <label>Responsável pela entrega *</label>
+        <input type="text" id="responsavelInput" placeholder="Nome de quem está enviando">
+      </div>
+    </div>
+
+    <table class="nf-table">
+      <thead>
+        <tr>
+          <th>Nota Fiscal</th>
+          <th class="vol-col">Volumes</th>
+          <th class="act-col"></th>
+        </tr>
+      </thead>
+      <tbody id="nfTableBody"></tbody>
+    </table>
+
+    <div class="add-row" id="addRowBtn"><span class="plus">＋</span> Adicionar nota fiscal</div>
+
+    <div class="totals">
+      <span class="label">Total de volumes</span>
+      <span class="value" id="totalValue">0</span>
+    </div>
+
+    <div class="sign-block">
+      <b>Recebido em perfeito estado</b> em ___/___/___ &nbsp;&nbsp; Horário: ______________<br>
+      <b>Nome:</b> ______________________________________ &nbsp;&nbsp; <b>Assinatura:</b> ______________________________________
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="printBtn">🖨️ Imprimir protocolo (2 folhas)</button>
+      <button class="btn btn-ghost" id="clearBtn">Limpar lista desta transportadora</button>
+    </div>
+  </div>
+
+  <footer class="company screen-only">
+    TB — Comércio De Presentes S.A. · Rua Colômbia, 270, Jardim América — São Paulo - SP · CEP: 01438000
+  </footer>
+
+  <!-- ============ PRINT VERSION (2 folhas separadas, estilo etiqueta) ============ -->
+  <div class="print-only" id="printArea"></div>
+
+  </div><!-- /#appScreen -->
+
+</div>
+
+<div id="toast"></div>
+
+<script src="firebase-config.js"></script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const app = initializeApp(window.FIREBASE_CONFIG);
+  const auth = getAuth(app);
+
+  const loginScreen = document.getElementById('loginScreen');
+  const appScreen = document.getElementById('appScreen');
+  const loginForm = document.getElementById('loginForm');
+  const loginError = document.getElementById('loginError');
+  const loginBtn = document.getElementById('loginBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  onAuthStateChanged(auth, (user)=>{
+    if(user){
+      loginScreen.style.display = 'none';
+      appScreen.style.display = 'block';
+      logoutBtn.style.display = 'inline-block';
+    } else {
+      loginScreen.style.display = 'block';
+      appScreen.style.display = 'none';
+      logoutBtn.style.display = 'none';
+    }
+  });
+
+  loginForm.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    loginError.textContent = '';
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'Entrando...';
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    signInWithEmailAndPassword(auth, email, password)
+      .catch((err)=>{
+        loginError.textContent = 'E-mail ou senha inválidos, ou o Firebase ainda não foi configurado neste site.';
+        console.error(err);
+      })
+      .finally(()=>{
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Entrar';
+      });
+  });
+
+  logoutBtn.addEventListener('click', ()=> signOut(auth));
+</script>
+
+<script>
+(function(){
+  const LOGOS = {
+    jamef: "logos/jamef.png",
+    azul: "logos/azul.png",
+    correios: "logos/correios.png"
+  };
+  const ICON = {
+    truck: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 5.5A1.5 1.5 0 013.5 4h9A1.5 1.5 0 0114 5.5V8h2.4c.5 0 .97.24 1.26.65l2.1 2.9c.16.22.24.48.24.75V15a1 1 0 01-1 1h-1.05a2.25 2.25 0 00-4.4 0H9.05a2.25 2.25 0 00-4.4 0H3a1 1 0 01-1-1V5.5zM16 9.5v3.5h3v-1.7l-1.8-2.5a.5.5 0 00-.43-.22H16z"/><circle cx="6.85" cy="16" r="1.5"/><circle cx="15.85" cy="16" r="1.5"/></svg>',
+    truckOutline: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="6" width="13" height="10"/><path d="M14 9h4l3 3v4h-7z"/><circle cx="6" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg>',
+    route: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19c0-6 6-4 6-10S4 3 4 3"/><path d="M20 5c0 6-6 4-6 10s6 6 6 6"/></svg>',
+    calendar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4M16 3v4"/></svg>',
+    user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>',
+    box: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg>',
+    pin: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-7.2 7-12a7 7 0 10-14 0c0 4.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>',
+    globe: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg>',
+    doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l3 3v15H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></svg>'
+  };
+  const SKYLINE_SVG = '<svg class="sign-deco" viewBox="0 0 600 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" fill="#eee"><rect x="0" y="30" width="30" height="30"/><rect x="34" y="18" width="22" height="42"/><rect x="60" y="34" width="26" height="26"/><rect x="90" y="10" width="20" height="50"/><rect x="114" y="26" width="30" height="34"/><rect x="150" y="20" width="18" height="40"/><path d="M168 60V38l40-14 40 14v22z"/><rect x="256" y="30" width="24" height="30"/><rect x="284" y="16" width="20" height="44"/><rect x="310" y="36" width="28" height="24"/><rect x="342" y="8" width="22" height="52"/><rect x="368" y="28" width="26" height="32"/><rect x="440" y="40" width="70" height="20"/><rect x="446" y="34" width="14" height="10"/><circle cx="460" cy="60" r="6"/><circle cx="494" cy="60" r="6"/><rect x="520" y="24" width="20" height="36"/><rect x="546" y="14" width="24" height="46"/><rect x="576" y="32" width="20" height="28"/></svg>';
+  const carriers = {
+    jamef:{name:"Jamef", code:"JMF", color:"#e42313", dark:"#a3170c"},
+    azul:{name:"Azul Cargo Express", code:"AZC", color:"#1a3f8b", dark:"#0d2757"},
+    correios:{name:"Correios", code:"COR", color:"#f2b705", dark:"#8a6600"}
+  };
+  let currentCarrier = "jamef";
+  let rowId = 0;
+  const STORAGE_KEY = 'tb_protocolo_coleta_v2';
+
+  let memoryStore = null;
+
+  function storageGet(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    }catch(e){
+      return memoryStore;
+    }
+  }
+  function storageSet(data){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }catch(e){
+      memoryStore = data;
+    }
+  }
+
+  function todayBR(){
+    const d = new Date();
+    return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();
+  }
+
+  function defaultState(){
+    const s = {};
+    Object.keys(carriers).forEach(k=>{
+      s[k] = { rows:[{nf:'', vol:1}], responsavel:'' };
+    });
+    return s;
+  }
+
+  let state = storageGet() || defaultState();
+  Object.keys(carriers).forEach(k=>{
+    if(!state[k]) state[k] = { rows:[{nf:'', vol:1}], responsavel:'' };
+  });
+
+  const root = document.documentElement;
+  const nfTableBody = document.getElementById('nfTableBody');
+  const totalValue = document.getElementById('totalValue');
+  const dataInput = document.getElementById('dataInput');
+  const responsavelInput = document.getElementById('responsavelInput');
+  const cardTitle = document.getElementById('cardTitle');
+  const statusPill = document.getElementById('statusPill');
+  const logoBox = document.getElementById('logoBox');
+  const saveIndicator = document.getElementById('saveIndicator');
+
+  function applyTheme(key){
+    const c = carriers[key];
+    root.style.setProperty('--accent', c.color);
+    root.style.setProperty('--accent-dark', c.dark);
+    root.style.setProperty('--accent-glow', c.color + '59');
+    cardTitle.textContent = 'Protocolo de Coleta — ' + c.name;
+    statusPill.innerHTML = '<span class="dot"></span>' + c.name;
+  }
+
+  function persist(){
+    storageSet(state);
+    saveIndicator.classList.add('show');
+    clearTimeout(persist._t);
+    persist._t = setTimeout(()=> saveIndicator.classList.remove('show'), 1200);
+  }
+
+  function updateCounts(){
+    Object.keys(carriers).forEach(k=>{
+      const n = state[k].rows.filter(r=>r.nf.trim()).length;
+      const el = document.getElementById('count-'+k);
+      if(el) el.textContent = n + (n===1 ? ' NF' : ' NFs');
+    });
+  }
+
+  function renderRows(){
+    nfTableBody.innerHTML = '';
+    const rows = state[currentCarrier].rows;
+    if(rows.length === 0){
+      state[currentCarrier].rows.push({nf:'', vol:1});
+    }
+    state[currentCarrier].rows.forEach((r, idx)=> buildRow(r, idx));
+    updateTotal();
+  }
+
+  function buildRow(r, idx){
+    rowId++;
+    const tr = document.createElement('tr');
+    tr.className = 'nf-row';
+    tr.dataset.idx = idx;
+    tr.innerHTML = `
+      <td><input type="text" class="nf-input" placeholder="Ex: NF-39162" value="${(r.nf||'').replace(/"/g,'&quot;')}"></td>
+      <td><input type="number" min="0" class="vol-input" value="${r.vol!=null?r.vol:1}"></td>
+      <td><button class="remove-btn" title="Remover">✕</button></td>
+    `;
+    nfTableBody.appendChild(tr);
+
+    const nfInput = tr.querySelector('.nf-input');
+    const volInput = tr.querySelector('.vol-input');
+    const removeBtn = tr.querySelector('.remove-btn');
+
+    nfInput.addEventListener('input', ()=>{
+      state[currentCarrier].rows[idx].nf = nfInput.value;
+      updateCounts();
+      persist();
+    });
+    volInput.addEventListener('input', ()=>{
+      state[currentCarrier].rows[idx].vol = parseInt(volInput.value,10) || 0;
+      updateTotal();
+      persist();
+    });
+    nfInput.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){
+        e.preventDefault();
+        addRow(true);
+      }
+    });
+    removeBtn.addEventListener('click', ()=>{
+      tr.style.transition = 'all .25s ease';
+      tr.style.opacity = '0';
+      tr.style.transform = 'translateX(-12px)';
+      setTimeout(()=>{
+        state[currentCarrier].rows.splice(idx,1);
+        if(state[currentCarrier].rows.length === 0){
+          state[currentCarrier].rows.push({nf:'', vol:1});
+        }
+        renderRows();
+        updateCounts();
+        persist();
+      }, 200);
+    });
+  }
+
+  function addRow(focus){
+    state[currentCarrier].rows.push({nf:'', vol:1});
+    renderRows();
+    persist();
+    if(focus){
+      const inputs = nfTableBody.querySelectorAll('.nf-input');
+      inputs[inputs.length-1].focus();
+    }
+  }
+
+  function updateTotal(){
+    let total = 0;
+    state[currentCarrier].rows.forEach(r=>{ total += (parseInt(r.vol,10)||0); });
+    totalValue.textContent = total;
+    totalValue.classList.remove('pulse');
+    void totalValue.offsetWidth;
+    totalValue.classList.add('pulse');
+  }
+
+  function loadCarrierUI(){
+    dataInput.value = todayBR();
+    responsavelInput.value = state[currentCarrier].responsavel || '';
+    renderRows();
+    updateCounts();
+    applyTheme(currentCarrier);
+  }
+
+  document.querySelectorAll('.carrier-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.carrier-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCarrier = btn.dataset.carrier;
+      loadCarrierUI();
+    });
+  });
+
+  responsavelInput.addEventListener('input', ()=>{
+    state[currentCarrier].responsavel = responsavelInput.value;
+    persist();
+  });
+
+  document.getElementById('addRowBtn').addEventListener('click', ()=> addRow(true));
+
+  document.getElementById('clearBtn').addEventListener('click', ()=>{
+    const c = carriers[currentCarrier];
+    if(!confirm('Limpar todas as notas fiscais de ' + c.name + '? Isso não afeta as outras transportadoras.')) return;
+    state[currentCarrier] = { rows:[{nf:'', vol:1}], responsavel:'' };
+    loadCarrierUI();
+    persist();
+    showToast('Lista de ' + c.name + ' limpa.');
+  });
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.remove('show');
+    void t.offsetWidth;
+    t.classList.add('show');
+    clearTimeout(t._hideTimer);
+    t._hideTimer = setTimeout(()=>{ t.classList.remove('show'); }, 2400);
+  }
+
+  function formatNF(raw){
+    let v = (raw||'').trim().toUpperCase();
+    if(!v) return '';
+    v = v.replace(/^NF[\s-]*/, ''); // remove um "NF" já existente no início, com ou sem hífen/espaço
+    return 'NF-' + v;
+  }
+
+  function buildPrintArea(){
+    const c = carriers[currentCarrier];
+    const data = todayBR(); // sempre a data do dia da impressão, não editável
+    const responsavel = state[currentCarrier].responsavel || '—';
+    const rows = state[currentCarrier].rows.filter(r=> (r.nf||'').trim());
+    const total = rows.reduce((s,r)=> s + (parseInt(r.vol,10)||0), 0);
+
+    const copyHTML = (viaLabel, viaN)=> {
+      const isEmpresa = viaN === 2;
+      return `
+      <div class="copy">
+        <div class="lbl-head">
+          <div class="lbl-head-left">
+            <div class="lbl-head-icon">${ICON.truck}</div>
+            <div>
+              <div class="lbl-title">Protocolo de Coleta</div>
+              <div class="lbl-sub">TB Comércio de Presentes S.A.</div>
+            </div>
+          </div>
+          <div class="lbl-via">
+            <div class="vtag">${ICON.route} Via — ${viaLabel}</div>
+            <div class="n">${viaN}/2</div>
+          </div>
+        </div>
+
+        <div class="lbl-carrier-row">
+          <div class="carrier-logo-box"><img src="${LOGOS[currentCarrier]}" alt="${c.name}"></div>
+          <div class="company-block">
+            <div class="cb-name">${ICON.pin} TB — Comércio De Presentes S.A.</div>
+            Rua Colômbia, 270 — Jardim América<br>São Paulo - SP · CEP: 01438000
+          </div>
+        </div>
+
+        <div class="lbl-info-grid">
+          <div class="info-cell">
+            <div class="ic-label">${ICON.calendar} Data</div>
+            <div class="ic-value">${data}</div>
+          </div>
+          <div class="info-cell">
+            <div class="ic-label">${ICON.user} Responsável</div>
+            <div class="ic-value">${responsavel}</div>
+          </div>
+          <div class="info-cell">
+            <div class="ic-label">${ICON.truckOutline} Transportadora</div>
+            <div class="ic-value">${c.name}</div>
+          </div>
+        </div>
+
+        <div class="lbl-section-title">${ICON.doc} Notas fiscais desta coleta</div>
+        <div class="lbl-table-card">
+          <table class="lbl-table">
+            <thead><tr><th>Nota Fiscal</th><th class="vc">Volumes</th>${isEmpresa ? '<th class="cc">Conf.</th>' : ''}</tr></thead>
+            <tbody>
+              ${rows.map(r=>`<tr><td>${formatNF(r.nf)}</td><td class="vc"><span class="vc-badge">${r.vol}</span></td>${isEmpresa ? '<td class="cc"><span class="check-box"></span></td>' : ''}</tr>`).join('') || `<tr><td colspan="${isEmpresa?3:2}">Nenhuma NF informada</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="lbl-total-card">
+          <div class="tt-icon">${ICON.box}</div>
+          <span class="tt-label">Total de volumes</span>
+          <span class="tt-value">${total}</span>
+        </div>
+
+        <div class="lbl-bottom">
+          <div class="lbl-sign-wrap">
+            <div class="lbl-sign">
+              <div class="sign-lines">
+                <div class="sign-top"><span class="sign-check">${ICON.check}</span> <b>Recebido em perfeito estado</b> em ___/___/___ &nbsp;&nbsp; Horário: ______________</div>
+                <b>Nome:</b> ______________________________________<br>
+                <b>Assinatura:</b> ______________________________________
+              </div>
+              ${SKYLINE_SVG}
+            </div>
+            <div class="lbl-stamp">Carimbo</div>
+          </div>
+
+          <div class="lbl-footer-addr">${ICON.globe} TB — Comércio De Presentes S.A. · Rua Colômbia, 270, Jardim América — São Paulo - SP · CEP: 01438000</div>
+        </div>
+      </div>
+    `;
+    };
+
+    document.getElementById('printArea').innerHTML =
+      copyHTML('Transportadora', 1) + copyHTML('Empresa', 2);
+  }
+
+  // Monta as vias sempre que uma impressão for disparada — seja pelo botão
+  // ou pelo atalho Ctrl+P do navegador (o evento beforeprint cobre os dois).
+  window.addEventListener('beforeprint', buildPrintArea);
+  window.addEventListener('afterprint', ()=>{
+    // limpa o responsável depois da impressão, assim o próximo protocolo
+    // não começa com o nome da entrega anterior
+    if(state[currentCarrier].responsavel){
+      state[currentCarrier].responsavel = '';
+      responsavelInput.value = '';
+      persist();
+    }
+  });
+
+  document.getElementById('printBtn').addEventListener('click', ()=>{
+    const anyNF = state[currentCarrier].rows.some(r=> (r.nf||'').trim());
+    if(!anyNF){
+      showToast('Preencha ao menos uma nota fiscal antes de imprimir.');
+      return;
+    }
+    const responsavelPreenchido = (responsavelInput.value||'').trim();
+    if(!responsavelPreenchido){
+      showToast('Preencha o nome do responsável antes de imprimir.');
+      responsavelInput.focus();
+      responsavelInput.classList.add('field-error');
+      setTimeout(()=> responsavelInput.classList.remove('field-error'), 1600);
+      return;
+    }
+    window.print();
+  });
+
+  // init
+  loadCarrierUI();
+  persist();
+})();
+</script>
+
+</body>
+</html>

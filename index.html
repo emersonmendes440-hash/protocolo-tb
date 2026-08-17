@@ -501,9 +501,12 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const app = initializeApp(window.FIREBASE_CONFIG);
   const auth = getAuth(app);
+  const db = getFirestore(app);
+  window.__cloud = { db, doc, setDoc, onSnapshot };
 
   const loginScreen = document.getElementById('loginScreen');
   const appScreen = document.getElementById('appScreen');
@@ -517,6 +520,7 @@
       loginScreen.style.display = 'none';
       appScreen.style.display = 'block';
       logoutBtn.style.display = 'inline-block';
+      if(window.__cloudSyncInit) window.__cloudSyncInit();
     } else {
       loginScreen.style.display = 'block';
       appScreen.style.display = 'none';
@@ -632,10 +636,58 @@
 
   function persist(){
     storageSet(state);
+    pushToCloud(currentCarrier);
     saveIndicator.classList.add('show');
     clearTimeout(persist._t);
     persist._t = setTimeout(()=> saveIndicator.classList.remove('show'), 1200);
   }
+
+  // ---------- Sincronização em nuvem (Firestore) ----------
+  // Cada transportadora é um documento em "protocolo/{jamef|azul|correios}".
+  // Assim, uma NF adicionada em um computador aparece automaticamente nos
+  // outros, para qualquer pessoa da equipe logada.
+  let cloudReady = false;
+  let cloudSyncStarted = false;
+  const pushTimers = {};
+
+  function pushToCloud(key){
+    if(!cloudReady || !window.__cloud) return;
+    clearTimeout(pushTimers[key]);
+    pushTimers[key] = setTimeout(()=>{
+      const { db, doc, setDoc } = window.__cloud;
+      setDoc(doc(db, 'protocolo', key), state[key]).catch((err)=>{
+        console.error('Erro ao sincronizar com a nuvem:', err);
+      });
+    }, 500);
+  }
+
+  function initCloudSync(){
+    if(cloudSyncStarted || !window.__cloud) return;
+    cloudSyncStarted = true;
+    const { db, doc, onSnapshot } = window.__cloud;
+    Object.keys(carriers).forEach(key=>{
+      onSnapshot(doc(db, 'protocolo', key), { includeMetadataChanges:true }, (snap)=>{
+        if(snap.metadata.hasPendingWrites) return; // eco da nossa própria escrita
+        if(!snap.exists()) return; // ainda não existe nada salvo pra essa transportadora
+        const data = snap.data() || {};
+        const incoming = {
+          rows: (Array.isArray(data.rows) && data.rows.length) ? data.rows : [{nf:'', vol:1}],
+          responsavel: data.responsavel || ''
+        };
+        if(JSON.stringify(incoming) === JSON.stringify(state[key])) return; // nada mudou de fato
+        state[key] = incoming;
+        storageSet(state);
+        updateCounts();
+        if(key === currentCarrier){
+          loadCarrierUI();
+        }
+      }, (err)=>{
+        console.error('Erro ao ouvir atualizações da nuvem:', err);
+      });
+    });
+    cloudReady = true;
+  }
+  window.__cloudSyncInit = initCloudSync;
 
   function updateCounts(){
     Object.keys(carriers).forEach(k=>{

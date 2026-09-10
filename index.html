@@ -104,13 +104,13 @@
   #appScreen,#loginScreen{animation:fadeIn .35s ease both;}
   @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
-  /* ---------- Transição fluida entre páginas (Chrome) ---------- */
+  /* ---------- Troca de aba: o navegador anima a página inteira ---------- */
+  @view-transition{navigation:auto}
+  @keyframes tbSai{to{opacity:0;transform:translateY(-10px) scale(.988);}}
+  @keyframes tbEntra{from{opacity:0;transform:translateY(14px) scale(.99);}}
   @media (prefers-reduced-motion: no-preference){
-    ::view-transition-old(root),
-    ::view-transition-new(root){
-      animation-duration:.32s;
-      animation-timing-function:cubic-bezier(.4,0,.2,1);
-    }
+    ::view-transition-old(root){animation:.24s cubic-bezier(.4,0,1,1) both tbSai;}
+    ::view-transition-new(root){animation:.34s cubic-bezier(0,0,.2,1) both tbEntra;}
   }
 
   /* ---------- Carrier tabs ---------- */
@@ -436,7 +436,6 @@
   <!-- ============ LOGIN ============ -->
   <div id="loginScreen">
     <h2>Entrar</h2>
-    <p>Acesso restrito à equipe da TB Comércio de Presentes.</p>
     <form id="loginForm">
       <div class="field">
         <label>E-mail</label>
@@ -493,7 +492,6 @@
     <div class="card-head">
       <div>
         <h2 id="cardTitle">Protocolo de Coleta — Jamef</h2>
-        <p>As notas ficam salvas neste navegador até você imprimir e limpar.</p>
       </div>
       <div class="save-indicator" id="saveIndicator"><span class="dot2"></span>Salvo</div>
     </div>
@@ -936,7 +934,6 @@
           <div class="pw-icon">${ICON.protocol}</div>
           <h2>Não é possível imprimir</h2>
           <p>Para <b>${c.name}</b>, ${motivo}.</p>
-          <p>Volte à tela do protocolo, preencha os dados e use o botão "Imprimir protocolo".</p>
         </div>
       `;
       return;

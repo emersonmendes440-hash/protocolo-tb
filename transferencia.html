@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-versao="5">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,9 +15,35 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="transferencia-style.css?v=4">
+<link rel="stylesheet" href="transferencia-style.css?v=5">
 </head>
 <body>
+<script>
+/* O GitHub Pages manda o HTML com cache de 10 minutos, então logo depois de uma
+   publicação o navegador ainda entrega a página antiga. Este trecho confere a
+   versão que está no servidor e, se for diferente da que carregou, recarrega uma
+   única vez. Roda uma vez por aba e não faz nada se estiver tudo em dia. */
+(function(){
+  var V = document.documentElement.getAttribute('data-versao');
+  var chave = 'tb-versao:' + location.pathname;
+  try{
+    if (sessionStorage.getItem(chave) === V) return;   // já conferido nesta aba
+    fetch(location.pathname, { cache: 'reload' })
+      .then(function(r){ return r.ok ? r.text() : null; })
+      .then(function(t){
+        if (!t) return;
+        var m = t.match(/data-versao="([^"]+)"/);
+        if (m && m[1] !== V){
+          sessionStorage.setItem(chave, m[1]);          // evita recarregar em laço
+          location.reload();
+        } else {
+          sessionStorage.setItem(chave, V);
+        }
+      })
+      .catch(function(){});
+  }catch(e){}
+})();
+</script>
 
 <!-- ============ VERIFICANDO SESSÃO ============ -->
 <div id="authCheck"><div class="spinner"></div></div>
@@ -220,6 +246,6 @@
   logoutBtn.addEventListener('click', ()=> signOut(auth));
 </script>
 
-<script src="transferencia-script.js?v=4"></script>
+<script src="transferencia-script.js?v=5"></script>
 </body>
 </html>

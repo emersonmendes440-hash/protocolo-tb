@@ -3,21 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Etiquetas · Transferência — TB Comércio de Presentes</title>
+<title>Transferência — TB Comércio de Presentes</title>
 
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.ico" sizes="any">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#0c0e14">
-<meta name="view-transition" content="same-origin">
 
-<!-- Montserrat desenha a etiqueta impressa; JetBrains Mono, os campos numéricos.
-     Sem internet, as fontes do sistema assumem. -->
+<!-- Montserrat desenha a etiqueta impressa; JetBrains Mono, os campos numéricos. -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="transferencia-style.css?v=3">
+<link rel="stylesheet" href="transferencia-style.css?v=4">
 </head>
 <body>
 
@@ -26,165 +24,145 @@
 
 <!-- ============ LOGIN ============ -->
 <div id="loginScreen">
-  <div class="login-card">
-    <div class="brand">
-      <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.4 12.7 12.6 20.5a1.9 1.9 0 0 1-2.7 0l-6.4-6.4a1.9 1.9 0 0 1-.5-1.3V5c0-1 .8-1.9 1.9-1.9h7.7c.5 0 1 .2 1.3.6l6.5 6.4a1.9 1.9 0 0 1 0 2.6z"/><circle cx="7.9" cy="7.9" r="1.4"/></svg></div>
-      <h1>Etiquetas<span>TB Comércio de Presentes S.A.</span></h1>
-    </div>
-    <h2>Entrar</h2>
-    <form id="loginForm">
-      <div class="field">
-        <label for="loginEmail">E-mail</label>
-        <input type="email" id="loginEmail" autocomplete="username" required>
-      </div>
-      <div class="field">
-        <label for="loginPassword">Senha</label>
-        <input type="password" id="loginPassword" autocomplete="current-password" required>
-      </div>
-      <button class="btn btn--primary" type="submit" id="loginBtn">Entrar</button>
-      <div id="loginError"></div>
-    </form>
+  <div class="brand">
+    <div class="logo"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="4" width="14" height="17" rx="2" stroke="#fff" stroke-width="2"/><rect x="9" y="2" width="6" height="3.6" rx="1.2" fill="#fff"/><path d="M8.4 12.6l2.6 2.6 5-5.6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div><h1>TB Comércio de Presentes<span>Expedição · S.A.</span></h1></div>
   </div>
+  <h2>Entrar</h2>
+  <form id="loginForm">
+    <div class="field">
+      <label for="loginEmail">E-mail</label>
+      <input type="email" id="loginEmail" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label for="loginPassword">Senha</label>
+      <input type="password" id="loginPassword" autocomplete="current-password" required>
+    </div>
+    <button class="btn btn-primary" type="submit" id="loginBtn">Entrar</button>
+    <div id="loginError"></div>
+  </form>
 </div>
 
 <!-- ============ APP (só aparece depois do login) ============ -->
 <div id="appScreen">
 <div class="wrap">
 
-<header class="topbar">
-  <div class="brand">
-    <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.4 12.7 12.6 20.5a1.9 1.9 0 0 1-2.7 0l-6.4-6.4a1.9 1.9 0 0 1-.5-1.3V5c0-1 .8-1.9 1.9-1.9h7.7c.5 0 1 .2 1.3.6l6.5 6.4a1.9 1.9 0 0 1 0 2.6z"/><circle cx="7.9" cy="7.9" r="1.4"/></svg></div>
-    <h1>Etiquetas<span>TB Comércio de Presentes S.A.</span></h1>
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="4" width="14" height="17" rx="2" stroke="#fff" stroke-width="2"/><rect x="9" y="2" width="6" height="3.6" rx="1.2" fill="#fff"/><path d="M8.4 12.6l2.6 2.6 5-5.6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div><h1>TB Comércio de Presentes<span>Expedição · S.A.</span></h1></div>
+    </div>
+    <div class="topbar-right">
+      <div class="nav-links">
+        <a href="index.html">Protocolo</a>
+        <a href="etiqueta.html">Transportadora</a>
+        <a href="transferencia.html" class="active">Transferência</a>
+      </div>
+      <button id="logoutBtn" class="logout-btn" style="display:none;">Sair</button>
+    </div>
   </div>
-  <div class="topbar-right">
-    <nav class="tool-switch" aria-label="Alternar ferramenta">
-      <a href="index.html">Protocolo de Coleta</a>
-      <a href="transferencia.html" class="active">Etiquetas</a>
-    </nav>
-    <button id="logoutBtn" class="logout-btn" style="display:none;">Sair</button>
-  </div>
-</header>
 
-<nav class="mode-bar" aria-label="Tipo de etiqueta">
-  <a href="etiqueta.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg> Etiqueta de transportadora</a>
-  <a href="transferencia.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h13M14 5l3 3-3 3M20 16H7M10 13l-3 3 3 3"/></svg> Transferência</a>
-</nav>
+  <div class="duo">
 
-<main class="workspace">
+    <!-- ============ FORMULÁRIO ============ -->
+    <div class="card card--form">
+      <div class="card-head">
+        <div><h2>Transferência</h2></div>
+        <div class="save-indicator"><span class="dot2"></span>100 × 122 mm</div>
+      </div>
 
-  <!-- ============ PAINEL DO FORMULÁRIO ============ -->
-  <section class="panel panel--form" aria-label="Dados da transferência">
-    <div class="panel-head">
-      <h2>Transferência</h2>
-      <span class="pill"><span class="dot"></span>100 × 122 mm</span>
+      <form id="form-etiqueta" autocomplete="off" novalidate>
+        <div class="field-row">
+          <div class="field field--destinatario">
+            <label for="destinatario">Destinatário</label>
+            <div class="autocomplete">
+              <input type="text" id="destinatario" name="destinatario" data-required
+                     placeholder="Digite ou escolha a loja" role="combobox"
+                     aria-expanded="false" aria-autocomplete="list" aria-controls="sugestoes">
+              <ul class="suggestions" id="sugestoes" role="listbox" hidden></ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field field--tipo" style="max-width:170px">
+            <span class="label-like">Tipo</span>
+            <div class="segmented" role="radiogroup" aria-label="Tipo do documento">
+              <label class="segment"><input type="radio" name="tipo" value="TRAN" checked><span>TRAN</span></label>
+              <label class="segment"><input type="radio" name="tipo" value="TBS"><span>TBS</span></label>
+            </div>
+          </div>
+          <div class="field field--tran" style="max-width:170px">
+            <label for="tran">Número</label>
+            <input type="text" id="tran" name="tran" data-required inputmode="numeric" class="mono" placeholder="0049974">
+          </div>
+          <div class="field field--nf" style="max-width:170px">
+            <label for="nf">Nota fiscal</label>
+            <input type="text" id="nf" name="nf" data-required inputmode="numeric" class="mono" placeholder="000000">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <span class="label-like">Identificação</span>
+            <output class="code-preview" id="codigo-preview" for="tran">
+              <span class="code-preview-key">TRAN / TBS</span>
+              <strong id="codigo-valor">TRAN-—</strong>
+            </output>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field field--volumes" style="max-width:170px">
+            <label for="volumes">Volumes</label>
+            <div class="stepper">
+              <button type="button" class="stepper-btn" data-step="-1" aria-label="Diminuir volumes">−</button>
+              <input type="number" id="volumes" name="volumes" value="1" min="1" max="999" class="mono">
+              <button type="button" class="stepper-btn" data-step="1" aria-label="Aumentar volumes">+</button>
+            </div>
+          </div>
+          <div class="field field--peso" style="max-width:190px">
+            <label for="peso">Peso <span class="opt">opcional</span></label>
+            <input type="text" id="peso" name="peso" inputmode="decimal" class="mono" placeholder="12,5">
+            <label class="check" for="peso-mao">
+              <input type="checkbox" id="peso-mao" name="peso-mao">
+              <span>Preencher à mão</span>
+            </label>
+          </div>
+          <div class="field field--log">
+            <label for="log">LOG <span class="opt">opcional</span></label>
+            <input type="text" id="log" name="log" placeholder="Código do log">
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" id="btn-gerar">Gerar etiquetas <kbd>F2</kbd></button>
+          <button type="button" class="btn btn-ghost" id="btn-limpar">Limpar <kbd>Esc</kbd></button>
+        </div>
+      </form>
     </div>
 
-    <form id="form-etiqueta" autocomplete="off" novalidate>
-
-      <div class="leg"><span class="n">01</span><span class="t">Destino</span><span class="rule"></span></div>
-      <div class="grid">
-        <div class="field field--destinatario">
-          <label for="destinatario">Destinatário</label>
-          <div class="autocomplete">
-            <input type="text" id="destinatario" name="destinatario" data-required
-                   placeholder="Digite ou escolha a loja" role="combobox"
-                   aria-expanded="false" aria-autocomplete="list" aria-controls="sugestoes">
-            <ul class="suggestions" id="sugestoes" role="listbox" hidden></ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="leg"><span class="n">02</span><span class="t">Documento</span><span class="rule"></span></div>
-      <div class="grid">
-        <div class="field field--tipo">
-          <span class="label-like">Tipo</span>
-          <div class="segmented" role="radiogroup" aria-label="Tipo do documento">
-            <label class="segment">
-              <input type="radio" name="tipo" value="TRAN" checked>
-              <span>TRAN</span>
-            </label>
-            <label class="segment">
-              <input type="radio" name="tipo" value="TBS">
-              <span>TBS</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="field field--tran">
-          <label for="tran">Número</label>
-          <input type="text" id="tran" name="tran" data-required inputmode="numeric"
-                 class="mono" placeholder="0049974">
-        </div>
-
-        <div class="field field--nf">
-          <label for="nf">Nota fiscal</label>
-          <input type="text" id="nf" name="nf" data-required inputmode="numeric"
-                 class="mono" placeholder="000000">
-        </div>
-
-        <output class="code-preview" id="codigo-preview" for="tran">
-          <span class="code-preview-key">Identificação</span>
-          <strong id="codigo-valor">TRAN-—</strong>
-        </output>
-      </div>
-
-      <div class="leg"><span class="n">03</span><span class="t">Carga</span><span class="rule"></span></div>
-      <div class="grid">
-        <div class="field field--volumes">
-          <label for="volumes">Volumes</label>
-          <div class="stepper">
-            <button type="button" class="stepper-btn" data-step="-1" aria-label="Diminuir volumes">−</button>
-            <input type="number" id="volumes" name="volumes" value="1" min="1" max="999" class="mono">
-            <button type="button" class="stepper-btn" data-step="1" aria-label="Aumentar volumes">+</button>
-          </div>
-        </div>
-
-        <div class="field field--peso">
-          <label for="peso">Peso <span class="opt">opcional</span></label>
-          <input type="text" id="peso" name="peso" inputmode="decimal" class="mono" placeholder="12,5">
-          <label class="check" for="peso-mao">
-            <input type="checkbox" id="peso-mao" name="peso-mao">
-            <span>Preencher à mão</span>
-          </label>
-        </div>
-
-        <div class="field field--log">
-          <label for="log">LOG <span class="opt">opcional</span></label>
-          <input type="text" id="log" name="log" placeholder="Código do log">
-        </div>
-      </div>
-
-      <div class="actions">
-        <button type="submit" class="btn btn--primary" id="btn-gerar">
-          Gerar etiquetas <kbd>F2</kbd>
-        </button>
-        <button type="button" class="btn btn--ghost" id="btn-limpar">
-          Limpar <kbd>Esc</kbd>
+    <!-- ============ ETIQUETAS GERADAS ============ -->
+    <div class="card card--saida">
+      <div class="card-head saida-head">
+        <div><h2 id="contador">Nenhuma etiqueta</h2></div>
+        <button type="button" class="btn btn-primary btn-print" id="btn-imprimir" disabled>
+          Imprimir <kbd>F4</kbd>
         </button>
       </div>
-    </form>
-  </section>
+      <p class="print-tip">Margens: nenhuma · sem cabeçalhos</p>
 
-  <!-- ============ PAINEL DE PRÉ-VISUALIZAÇÃO ============ -->
-  <section class="panel panel--preview" aria-label="Etiquetas geradas">
-    <div class="preview-toolbar">
-      <strong id="contador">Nenhuma etiqueta</strong>
-      <button type="button" class="btn btn--dark" id="btn-imprimir" disabled>
-        Imprimir <kbd>F4</kbd>
-      </button>
-    </div>
-    <p class="print-tip">Margens: nenhuma · sem cabeçalhos</p>
-
-    <div class="labels" id="labels">
-      <div class="empty" id="empty-state">
-        <div class="empty-art" aria-hidden="true"><span></span><span></span><span></span></div>
-        <p>Nenhuma etiqueta gerada</p>
+      <div class="labels" id="labels">
+        <div class="empty" id="empty-state">
+          <div class="empty-art" aria-hidden="true"><span></span><span></span><span></span></div>
+          <p>Nenhuma etiqueta gerada</p>
+        </div>
       </div>
     </div>
-  </section>
-</main>
 
-<footer class="company">TB Comércio de Presentes S.A.</footer>
+  </div><!-- /.duo -->
+
+  <footer class="company">TB — Comércio De Presentes S.A.</footer>
 
 </div><!-- /.wrap -->
 </div><!-- /#appScreen -->
@@ -212,10 +190,10 @@
     authCheck.style.display = 'none';
     if(user){
       loginScreen.style.display = 'none';
-      appScreen.style.display = 'contents';
+      appScreen.style.display = 'block';
       logoutBtn.style.display = 'inline-block';
     } else {
-      loginScreen.style.display = 'flex';
+      loginScreen.style.display = 'block';
       appScreen.style.display = 'none';
       logoutBtn.style.display = 'none';
     }
@@ -242,6 +220,6 @@
   logoutBtn.addEventListener('click', ()=> signOut(auth));
 </script>
 
-<script src="transferencia-script.js?v=3"></script>
+<script src="transferencia-script.js?v=4"></script>
 </body>
 </html>

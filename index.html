@@ -39,7 +39,7 @@
     transition:background 0.7s ease;
   }
 
-  .wrap{max-width:980px;margin:0 auto;}
+  .wrap{max-width:1180px;margin:0 auto;}
 
   /* ---------- Top bar / brand ---------- */
   .topbar{
@@ -457,15 +457,15 @@
     <div class="brand">
       <div class="logo" id="logoBox"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="4" width="14" height="17" rx="2" stroke="#fff" stroke-width="2"/><rect x="9" y="2" width="6" height="3.6" rx="1.2" fill="#fff"/><path d="M8.4 12.6l2.6 2.6 5-5.6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
       <div>
-        <h1>Protocolo de Coleta<span>TB Comércio de Presentes S.A.</span></h1>
+        <h1>TB Comércio de Presentes<span>Expedição · S.A.</span></h1>
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
       <div class="nav-links">
-        <a href="index.html" class="active">Protocolo de Coleta</a>
-        <a href="etiqueta.html">Etiquetas</a>
+        <a href="index.html" class="active">Protocolo</a>
+        <a href="etiqueta.html">Transportadora</a>
+        <a href="transferencia.html">Transferência</a>
       </div>
-      <div class="status-pill" id="statusPill"><span class="dot"></span>Jamef</div>
       <button id="logoutBtn" class="logout-btn" style="display:none;">Sair</button>
     </div>
   </div>
@@ -670,7 +670,6 @@
   const dataInput = document.getElementById('dataInput');
   const responsavelInput = document.getElementById('responsavelInput');
   const cardTitle = document.getElementById('cardTitle');
-  const statusPill = document.getElementById('statusPill');
   const logoBox = document.getElementById('logoBox');
   const saveIndicator = document.getElementById('saveIndicator');
 
@@ -680,7 +679,6 @@
     root.style.setProperty('--accent-dark', c.dark);
     root.style.setProperty('--accent-glow', c.color + '59');
     cardTitle.textContent = 'Protocolo de Coleta — ' + c.name;
-    statusPill.innerHTML = '<span class="dot"></span>' + c.name;
   }
 
   function persist(){

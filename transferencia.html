@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Expedição · Gerador de Etiquetas — TB Comércio de Presentes</title>
+<title>Expedição · Transferência — TB Comércio de Presentes</title>
 
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.ico" sizes="any">
@@ -11,13 +11,12 @@
 <meta name="theme-color" content="#0E141B">
 <meta name="view-transition" content="same-origin">
 
-<!-- Tipografia: Barlow (interface), Barlow Condensed (etiquetas), JetBrains Mono (dados).
-     Se estiver offline, as fontes de sistema assumem automaticamente. -->
+<!-- Tipografia: Barlow (interface), Barlow Condensed (títulos), Montserrat (etiquetas), JetBrains Mono (dados). -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="etiqueta-style.css">
+<link rel="stylesheet" href="transferencia-style.css">
 </head>
 <body>
 
@@ -59,7 +58,7 @@
 
   <nav class="tool-switch" aria-label="Alternar ferramenta">
     <a href="index.html"><span>Protocolo de Coleta</span></a>
-    <a href="etiqueta.html" class="active"><span>Etiquetas</span></a>
+    <a href="transferencia.html" class="active"><span>Etiquetas</span></a>
   </nav>
 
   <div style="display:flex;align-items:center;gap:14px;">
@@ -76,133 +75,72 @@
 <!-- ============ ALTERNÂNCIA DE ETIQUETA ============ -->
 <div class="mode-bar">
   <nav class="mode-switch" aria-label="Tipo de etiqueta">
-    <a href="etiqueta.html" class="active" aria-current="page">Etiqueta de transportadora</a>
-    <a href="transferencia.html">Transferência</a>
+    <a href="etiqueta.html">Etiqueta de transportadora</a>
+    <a href="transferencia.html" class="active" aria-current="page">Transferência</a>
   </nav>
 </div>
 
 <main class="workspace">
 
   <!-- ============ PAINEL DO FORMULÁRIO ============ -->
-  <section class="panel panel--form" aria-label="Dados do envio">
+  <section class="panel panel--form" aria-label="Dados da transferência">
     <form id="form-etiqueta" autocomplete="off" novalidate>
 
-      <!-- ---- Destinatário ---- -->
+      <!-- ---- Destino ---- -->
       <fieldset class="group">
-        <legend class="group-title"><span class="group-index">01</span> Destinatário</legend>
+        <legend class="group-title"><span class="group-index">01</span> Destino</legend>
 
         <div class="field field--full">
-          <label for="nome">Nome do destinatário</label>
-          <input type="text" id="nome" name="nome" data-required placeholder="Nome ou razão social">
-        </div>
-
-        <div class="field field--cep">
-          <label for="cep">CEP</label>
-          <input type="text" id="cep" name="cep" data-required inputmode="numeric"
-                 maxlength="9" placeholder="00000-000" class="mono">
-          <p class="hint" id="cep-status" role="status" aria-live="polite">Busca automática de endereço</p>
-        </div>
-
-        <div class="field field--endereco">
-          <label for="endereco">Endereço</label>
-          <input type="text" id="endereco" name="endereco" data-required placeholder="Preenchido pelo CEP">
-        </div>
-
-        <div class="field field--numero">
-          <label for="numero">Número</label>
-          <input type="text" id="numero" name="numero" data-required class="mono" placeholder="270">
-        </div>
-
-        <div class="field field--complemento">
-          <label for="complemento">Complemento <span class="opt">opcional</span></label>
-          <input type="text" id="complemento" name="complemento" placeholder="Sala, bloco, apto">
-        </div>
-
-        <div class="field field--bairro">
-          <label for="bairro">Bairro</label>
-          <input type="text" id="bairro" name="bairro" data-required placeholder="Preenchido pelo CEP">
-        </div>
-
-        <div class="field field--cidade">
-          <label for="cidade">Cidade</label>
-          <input type="text" id="cidade" name="cidade" data-required placeholder="Preenchido pelo CEP">
-        </div>
-
-        <div class="field field--uf">
-          <label for="uf">UF</label>
-          <select id="uf" name="uf" data-required>
-            <option value="">--</option>
-            <option>AC</option><option>AL</option><option>AP</option><option>AM</option>
-            <option>BA</option><option>CE</option><option>DF</option><option>ES</option>
-            <option>GO</option><option>MA</option><option>MT</option><option>MS</option>
-            <option>MG</option><option>PA</option><option>PB</option><option>PR</option>
-            <option>PE</option><option>PI</option><option>RJ</option><option>RN</option>
-            <option>RS</option><option>RO</option><option>RR</option><option>SC</option>
-            <option>SP</option><option>SE</option><option>TO</option>
-          </select>
+          <label for="destinatario">Destinatário</label>
+          <div class="autocomplete">
+            <input type="text" id="destinatario" name="destinatario" data-required
+                   placeholder="Digite ou escolha a loja" role="combobox"
+                   aria-expanded="false" aria-autocomplete="list" aria-controls="sugestoes">
+            <ul class="suggestions" id="sugestoes" role="listbox" hidden></ul>
+          </div>
+          <p class="hint">Setas navegam, Enter aceita a sugestão em destaque.</p>
         </div>
       </fieldset>
 
-      <!-- ---- Pedido ---- -->
+      <!-- ---- Documento ---- -->
       <fieldset class="group">
-        <legend class="group-title"><span class="group-index">02</span> Pedido</legend>
+        <legend class="group-title"><span class="group-index">02</span> Documento</legend>
 
-        <div class="field field--danfe">
-          <label for="danfe">Chave de acesso da NF-e <span class="opt">44 dígitos</span></label>
-          <input type="text" id="danfe" name="danfe" inputmode="numeric" maxlength="54"
-                 class="mono" placeholder="Cole a chave aqui" autocomplete="off">
-          <p class="hint" id="danfe-status" role="status" aria-live="polite">Preenche série e nota fiscal e imprime o código de barras.</p>
+        <div class="field field--tipo">
+          <span class="label-like">Tipo</span>
+          <div class="segmented" role="radiogroup" aria-label="Tipo do documento">
+            <label class="segment">
+              <input type="radio" name="tipo" value="TRAN" checked>
+              <span>TRAN</span>
+            </label>
+            <label class="segment">
+              <input type="radio" name="tipo" value="TBS">
+              <span>TBS</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="field field--tran">
+          <label for="tran">Número</label>
+          <input type="text" id="tran" name="tran" data-required inputmode="numeric"
+                 class="mono" placeholder="0049974">
         </div>
 
         <div class="field field--nf">
           <label for="nf">Nota fiscal</label>
-          <input type="text" id="nf" name="nf" data-required inputmode="numeric" class="mono" placeholder="000000">
+          <input type="text" id="nf" name="nf" data-required inputmode="numeric"
+                 class="mono" placeholder="000000">
         </div>
 
-        <div class="field field--serie">
-          <label for="serie">Série</label>
-          <input type="text" id="serie" name="serie" inputmode="numeric" maxlength="3" class="mono" placeholder="1">
-        </div>
-
-        <div class="field field--tipo">
-          <span class="label-like">Tipo</span>
-          <div class="segmented" role="radiogroup" aria-label="Tipo do pedido">
-            <label class="segment">
-              <input type="radio" name="tipo" value="TBS" checked>
-              <span>TBS</span>
-            </label>
-            <label class="segment">
-              <input type="radio" name="tipo" value="TRAN">
-              <span>TRAN</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="field field--pedido">
-          <label for="pedido">Número do pedido</label>
-          <input type="text" id="pedido" name="pedido" data-required inputmode="numeric" class="mono" placeholder="0049974">
-        </div>
-
-        <output class="code-preview" id="codigo-preview" for="pedido">
+        <output class="code-preview" id="codigo-preview" for="tran">
           <span class="code-preview-key">Identificação</span>
-          <strong id="codigo-valor">TBS-—</strong>
+          <strong id="codigo-valor">TRAN-—</strong>
         </output>
       </fieldset>
 
-      <!-- ---- Envio ---- -->
+      <!-- ---- Carga ---- -->
       <fieldset class="group">
-        <legend class="group-title"><span class="group-index">03</span> Envio</legend>
-
-        <div class="field field--transportadora">
-          <label for="transportadora">Transportadora</label>
-          <div class="autocomplete">
-            <input type="text" id="transportadora" name="transportadora" data-required
-                   placeholder="Digite para buscar" role="combobox"
-                   aria-expanded="false" aria-autocomplete="list" aria-controls="sugestoes">
-            <ul class="suggestions" id="sugestoes" role="listbox" hidden></ul>
-          </div>
-          <p class="hint">Enter aceita a sugestão em destaque. Nomes novos são salvos na lista.</p>
-        </div>
+        <legend class="group-title"><span class="group-index">03</span> Carga</legend>
 
         <div class="field field--volumes">
           <label for="volumes">Volumes</label>
@@ -211,6 +149,16 @@
             <input type="number" id="volumes" name="volumes" value="1" min="1" max="999" class="mono">
             <button type="button" class="stepper-btn" data-step="1" aria-label="Aumentar volumes">+</button>
           </div>
+        </div>
+
+        <div class="field field--peso">
+          <label for="peso">Peso <span class="opt">opcional</span></label>
+          <input type="text" id="peso" name="peso" inputmode="decimal" class="mono" placeholder="12,5">
+        </div>
+
+        <div class="field field--log">
+          <label for="log">LOG <span class="opt">opcional</span></label>
+          <input type="text" id="log" name="log" placeholder="Código do log">
         </div>
       </fieldset>
 
@@ -248,7 +196,7 @@
           <span></span><span></span><span></span>
         </div>
         <p><strong>As etiquetas aparecem aqui.</strong></p>
-        <p>Preencha o CEP para puxar o endereço, informe a quantidade de volumes e gere o lote.</p>
+        <p>Escolha a loja de destino, informe TRAN, nota fiscal e a quantidade de volumes.</p>
       </div>
     </div>
   </section>
@@ -263,9 +211,9 @@
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-  // Observação: a Etiqueta de Transportadora NÃO usa Firestore de propósito —
-  // os dados preenchidos ficam individuais em cada computador (apenas localStorage),
-  // diferente do Protocolo de Coleta que sincroniza em nuvem.
+  // Observação: a Transferência NÃO usa Firestore de propósito — os dados
+  // preenchidos ficam individuais em cada computador (apenas localStorage),
+  // igual à Etiqueta de Transportadora e diferente do Protocolo de Coleta.
   const app = initializeApp(window.FIREBASE_CONFIG);
   const auth = getAuth(app);
 
@@ -311,6 +259,6 @@
   logoutBtn.addEventListener('click', ()=> signOut(auth));
 </script>
 
-<script src="etiqueta-script.js"></script>
+<script src="transferencia-script.js"></script>
 </body>
 </html>

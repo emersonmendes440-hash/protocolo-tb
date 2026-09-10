@@ -227,25 +227,13 @@ kbd{
 .hint.is-loading{color:var(--text)}
 
 /* larguras da grade */
-.field--full,
-.field--endereco,
-.field--transportadora{grid-column:span 12}
-.field--cep{grid-column:span 5}
-.field--numero{grid-column:span 3}
-.field--complemento{grid-column:span 4}
-.field--bairro{grid-column:span 5}
-.field--cidade{grid-column:span 4}
-.field--uf{grid-column:span 3}
-.field--danfe{grid-column:span 12}
-.field--nf{grid-column:span 3}
-.field--serie{grid-column:span 2}
-.field--tipo{grid-column:span 3}
-.field--pedido{grid-column:span 4}
+.field--full{grid-column:span 12}
+.field--tipo{grid-column:span 4}
+.field--tran{grid-column:span 4}
+.field--nf{grid-column:span 4}
 .field--volumes{grid-column:span 4}
-
-/* a chave tem 44 dígitos + separadores: reduz a fonte para caber numa linha só */
-.field--danfe input{font-size:12.5px; letter-spacing:0}
-.field--danfe input.is-ok{border-color:var(--ok)}
+.field--peso{grid-column:span 4}
+.field--log{grid-column:span 4}
 
 /* seletor TBS / TRAN */
 .segmented{
@@ -455,9 +443,8 @@ kbd{
   background:var(--panel-3);
 }
 
-/* ---------- 7. Etiquetas 100 x 122 mm ---------- */
-/* Duas etiquetas independentes: DESTINATARIO e REMETENTE.
-   Cada uma ocupa uma pagina inteira de 100 x 122 mm.
+/* ---------- 7. Etiqueta 100 x 122 mm ---------- */
+/* Etiqueta unica: destino em destaque, dados da transferencia e remetente fixo.
    --fit e o fator de encaixe global aplicado pelo script.js. */
 
 .label{
@@ -529,14 +516,7 @@ kbd{
   overflow:hidden;
 }
 .lb-vol-key{font-size:.62em; font-weight:600; letter-spacing:.14em; line-height:1.1; white-space:nowrap}
-.lb-vol-num{
-  font-size:2em;
-  font-weight:800;
-  line-height:1.2;
-  white-space:nowrap;
-  max-width:100%;
-  overflow:hidden;
-}
+.lb-vol-num{font-size:2em; font-weight:800; line-height:1.2; white-space:nowrap; max-width:100%; overflow:hidden}
 
 /* --- corpo --- */
 .lb-body{
@@ -551,23 +531,18 @@ kbd{
 
 .lb-row{display:flex; align-items:center; gap:2.2mm; padding:2.2mm 0; min-width:0}
 .lb-row--line{border-top:.35mm solid #000}
-.lb-row--dash{border-top:.35mm dashed #000; justify-content:center}
 
 .lb-cell{flex:1; display:flex; align-items:center; gap:1.9mm; min-width:0}
 .lb-cell + .lb-cell{border-left:.3mm solid #000; padding-left:2mm}
-.lb-cell--grow{flex:1.12}
-.lb-cell--tight{flex:.8}
+.lb-cell--grow{flex:1.2}
 .lb-cell--auto{flex:none}
-.lb-cell--nf{flex:.95}
-.lb-cell--pedido{flex:1.25}
-.lb-cell--transportadora{flex:1.1}
 
-.lb-ic{width:calc(5.5mm * var(--fit, 1)); height:calc(5.5mm * var(--fit, 1)); flex:none}
+.lb-ic{width:calc(6.6mm * var(--fit, 1)); height:calc(6.6mm * var(--fit, 1)); flex:none}
 .lb-txt{flex:1; min-width:0}
 
 .lb-k{
   display:block;
-  font-size:.58em;
+  font-size:.68em;
   font-weight:600;
   letter-spacing:.05em;
   text-transform:uppercase;
@@ -577,149 +552,70 @@ kbd{
 }
 .lb-v{
   display:block;
-  font-size:1.05em;
+  font-size:1.62em;
   font-weight:700;
   text-transform:uppercase;
   line-height:1.16;
   white-space:nowrap;
   overflow:hidden;
 }
-/* valores longos passam a quebrar em ate duas linhas */
-.lb-v--wrap{
-  white-space:normal;
-  overflow-wrap:break-word;
-  max-height:2.32em;
-}
+.lb-v--wrap{white-space:normal; overflow-wrap:break-word; max-height:2.46em}
 
-/* --- identificacao do destinatario --- */
-.lb-id{flex:none; padding-bottom:1.2mm}
-.lb-id .lb-row{padding:1.8mm 0}
-.lb-id .lb-ic{width:calc(8.4mm * var(--fit, 1)); height:calc(8.4mm * var(--fit, 1))}
-
-.lb-name{
-  display:block;
-  font-size:1.75em;
-  font-weight:800;
-  line-height:1.06;
-  text-transform:uppercase;
-  overflow-wrap:anywhere;
-  max-height:2.12em;
-  overflow:hidden;
-}
-.lb-street{
-  display:block;
-  font-size:1.28em;
-  font-weight:700;
-  line-height:1.16;
-  text-transform:uppercase;
-  overflow-wrap:anywhere;
-  max-height:2.32em;
-  overflow:hidden;
-}
-.lb-extra{
-  display:block;
-  font-size:.98em;
-  font-weight:400;
-  line-height:1.28;
-  text-transform:uppercase;
-  overflow-wrap:anywhere;
-  max-height:2.56em;
-  overflow:hidden;
-}
-
-/* --- bloco da DANFE: serie, nota, codigo de barras e chave --- */
-.lb-danfe{
-  flex:none;
-  min-width:0;
-  display:flex;
-  flex-direction:column;
-  gap:.9mm;
-  padding-top:1.8mm;
-  border-top:.35mm dashed #000;
-}
-
-.lb-danfe-head{
-  display:flex;
-  align-items:baseline;
-  justify-content:space-between;
-  gap:2.4mm;
-  min-width:0;
-}
-.lb-danfe-k{
-  font-size:.58em;
-  font-weight:600;
-  letter-spacing:.05em;
-  text-transform:uppercase;
-  white-space:nowrap;
-  overflow:hidden;
-}
-.lb-danfe-nf{
-  font-size:.86em;
-  font-weight:800;
-  letter-spacing:.02em;
-  text-transform:uppercase;
-  white-space:nowrap;
-  overflow:hidden;
-}
-
-/* o SVG e vetorial: esticar na largura mantem as barras proporcionais */
-.lb-bc{
-  display:block;
-  width:100%;
-  height:calc(12mm * var(--fit, 1));
-  background:#fff;
-}
-.lb-bc svg{display:block; width:100%; height:100%}
-.lb-bc rect{fill:#000}
-
-.lb-danfe-chave{
-  display:block;
-  font-family:var(--mono);
-  font-size:.72em;
-  font-weight:500;
-  letter-spacing:.01em;
-  line-height:1.2;
-  text-align:center;
-  white-space:nowrap;
-  overflow:hidden;
-}
-
-/* --- etiqueta do remetente --- */
-.lb-body--sender{justify-content:space-evenly; padding:0 1mm}
-.lb-sender-row{display:flex; align-items:center; gap:3.6mm; padding:4mm 1mm; min-width:0}
-.lb-sender-row + .lb-sender-row{border-top:.35mm solid #000}
-.lb-badge{
-  flex:none;
-  width:calc(12.4mm * var(--fit, 1));
-  height:calc(12.4mm * var(--fit, 1));
+/* --- destino em destaque --- */
+.lb-dest{
+  flex:1;
   display:flex;
   align-items:center;
-  justify-content:center;
+  gap:3.4mm;
+  padding:3mm 0;
+  min-height:0;
+}
+.lb-dest .lb-ic{width:calc(13mm * var(--fit, 1)); height:calc(13mm * var(--fit, 1))}
+.lb-dest .lb-k{font-size:.98em; letter-spacing:.14em; margin-bottom:.6mm}
+.lb-dest-name{
+  display:block;
+  font-size:3.9em;
+  font-weight:800;
+  line-height:1.02;
+  letter-spacing:-.01em;
+  text-transform:uppercase;
+  overflow-wrap:normal;
+  max-height:2.22em;
+  overflow:hidden;
+}
+
+/* --- barra do remetente --- */
+.lb-foot{
+  flex:none;
+  display:flex;
+  align-items:center;
+  gap:3.4mm;
+  height:18mm;
+  margin-top:2.6mm;
+  padding:0 4mm;
   background:#000;
   color:#fff;
-  border-radius:50%;
+  border-radius:2.6mm;
+  overflow:hidden;
 }
-.lb-badge .lb-ic{width:calc(6.8mm * var(--fit, 1)); height:calc(6.8mm * var(--fit, 1))}
-.lb-sender-name{
+.lb-logo{
+  flex:none;
+  width:calc(12.5mm * var(--fit, 1));
+  height:calc(12.5mm * var(--fit, 1));
   display:block;
-  font-size:1.08em;
+}
+.lb-logo svg{width:100%; height:100%; display:block}
+.lb-foot .lb-k{font-size:.62em; letter-spacing:.14em; color:#C9C9C9}
+.lb-foot-name{
+  display:block;
+  font-size:1.95em;
   font-weight:800;
+  line-height:1.1;
   text-transform:uppercase;
-  line-height:1.16;
-  overflow-wrap:anywhere;
-  max-height:2.32em;
+  overflow-wrap:normal;
+  max-height:2.36em;
   overflow:hidden;
 }
-.lb-sender-sub{
-  display:block;
-  font-size:.95em;
-  font-weight:400;
-  line-height:1.32;
-  overflow-wrap:anywhere;
-  max-height:2.64em;
-  overflow:hidden;
-}
-.lb-sender-sub b{font-weight:700}
 
 /* ---------- 8. Toast ---------- */
 .toast{
@@ -752,10 +648,8 @@ kbd{
 @media (max-width:520px){
   .workspace{padding:12px; gap:12px}
   .panel--form{padding:16px}
-  .field--cep,.field--numero,.field--complemento,
-  .field--bairro,.field--cidade,.field--uf,
-  .field--danfe,.field--nf,.field--serie,
-  .field--tipo,.field--pedido,.field--volumes{grid-column:span 12}
+  .field--tipo,.field--tran,.field--nf,
+  .field--volumes,.field--peso,.field--log{grid-column:span 12}
   .label{transform:scale(.82); transform-origin:top center; margin-bottom:-22mm}
 }
 

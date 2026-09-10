@@ -63,6 +63,7 @@ const campos = {
   nf: $('#nf'),
   volumes: $('#volumes'),
   peso: $('#peso'),
+  pesoMao: $('#peso-mao'),
   log: $('#log')
 };
 
@@ -261,16 +262,16 @@ function icone(nome) {
 /* ---------- 6. Montagem da etiqueta ---------- */
 
 /** Célula de dado: ícone + rótulo + valor. */
-function celula(nomeIcone, chave, valor, classe = '') {
+function celula(nomeIcone, chave, valor, classe = '', bruto = false) {
   const v = String(valor || '').trim();
   // Só quebra linha quem tem espaço: TRAN-0049974 e números nunca se partem.
-  const quebra = /\s/.test(v) ? ' lb-v--wrap' : '';
+  const quebra = !bruto && /\s/.test(v) ? ' lb-v--wrap' : '';
   return `
     <span class="lb-cell ${classe}">
       ${icone(nomeIcone)}
       <span class="lb-txt">
         <span class="lb-k" data-fit="0.68,0.46">${esc(chave)}</span>
-        <span class="lb-v${quebra}" data-fit="1.62,0.66">${esc(v)}</span>
+        <span class="lb-v${quebra}" data-fit="1.62,0.66">${bruto ? v : esc(v)}</span>
       </span>
     </span>`;
 }
@@ -282,7 +283,12 @@ function montarEtiqueta(d, volume) {
 
   // Peso e LOG são opcionais: a linha só existe se ao menos um for preenchido.
   const opcionais = [];
-  if (d.peso) opcionais.push(celula('peso', 'Peso', d.peso + ' KG'));
+  if (d.pesoMao) {
+    // Sai o rótulo com uma linha vazia e o KG, para anotar a lápis ou caneta.
+    opcionais.push(celula('peso', 'Peso', '<span class="lb-mao"></span>KG', 'lb-cell--mao', true));
+  } else if (d.peso) {
+    opcionais.push(celula('peso', 'Peso', d.peso + ' KG'));
+  }
   if (d.log) opcionais.push(celula('log', 'LOG', d.log));
   const linhaOpcional = opcionais.length
     ? `<div class="lb-row lb-row--line">${opcionais.join('')}</div>`
@@ -373,6 +379,20 @@ function ajustarTodas() {
   $$('.label', elLabels).forEach(ajustarEtiqueta);
 }
 
+/* ---------- Peso escrito à mão ----------
+   Marcado o campo, o peso digitado deixa de valer: a etiqueta sai com o
+   rótulo Peso, uma linha em branco e o KG, para preencher depois de imprimir. */
+
+function aplicarPesoMao() {
+  const mao = campos.pesoMao.checked;
+  campos.peso.disabled = mao;
+  campos.peso.classList.toggle('is-off', mao);
+  if (mao) campos.peso.value = '';
+}
+
+campos.pesoMao.addEventListener('change', aplicarPesoMao);
+aplicarPesoMao();
+
 /* ---------- 8. Geração, limpeza e impressão ---------- */
 
 function limparErro(el) { el.classList.remove('is-invalid'); }
@@ -403,6 +423,7 @@ function coletarDados() {
     codigo: codigoDocumento(),
     nf: campos.nf.value.trim(),
     peso: campos.peso.value.trim().replace(/,$/, ''),
+    pesoMao: campos.pesoMao.checked,
     log: campos.log.value.trim().toUpperCase(),
     total
   };
@@ -431,6 +452,7 @@ function gerarEtiquetas() {
 
 function limparFormulario() {
   form.reset();
+  aplicarPesoMao();
   $$('.is-invalid', form).forEach(limparErro);
   elLabels.innerHTML = '';
   elLabels.appendChild(elVazio);

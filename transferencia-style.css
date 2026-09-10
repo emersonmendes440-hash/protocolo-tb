@@ -222,6 +222,32 @@ kbd{
 .field select option{background:var(--panel-2); color:var(--text)}
 
 .hint{margin:1px 0 0; font-size:11.5px; color:var(--muted)}
+
+/* caixa de seleção enxuta usada abaixo de um campo */
+.field label.check{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin-top:8px;
+  font-size:11.5px;
+  font-weight:500;
+  letter-spacing:0;
+  text-transform:none;
+  line-height:1.25;
+  color:var(--muted);
+  cursor:pointer;
+  user-select:none;
+}
+.check input{
+  width:14px;
+  height:14px;
+  margin:0;
+  accent-color:var(--signal);
+  cursor:pointer;
+}
+.field label.check:hover{color:var(--text)}
+
+input.is-off{opacity:.42}
 .hint.is-ok{color:var(--ok); font-weight:500}
 .hint.is-error{color:var(--warn); font-weight:500}
 .hint.is-loading{color:var(--text)}
@@ -560,6 +586,15 @@ kbd{
   overflow:hidden;
 }
 .lb-v--wrap{white-space:normal; overflow-wrap:break-word; max-height:2.46em}
+
+/* espaço em branco para anotar o peso à mão depois de imprimir */
+.lb-mao{
+  display:inline-block;
+  width:3.4em;
+  height:.86em;
+  margin-right:.3em;
+  border-bottom:.055em solid #000;
+}
 
 /* --- destino em destaque --- */
 .lb-dest{

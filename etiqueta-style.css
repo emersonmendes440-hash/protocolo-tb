@@ -270,11 +270,16 @@ kbd{
 
 /* a etiqueta é maior que a coluna da direita: reduz só na tela (a impressão volta ao tamanho real).
    A animação "pop" precisa sair, senão o fill-mode fixa transform:none e anula o scale. */
-.card--saida .label{
-  animation:none;
-  transform:scale(.85);
-  transform-origin:top center;
-  margin-bottom:-69px;
+/* SÓ NA TELA. Sem o @media screen esta regra vencia a da impressão por
+   especificidade (.card--saida .label = 0,2,0 contra .label = 0,1,0; media query
+   não soma especificidade) e a etiqueta saía impressa a 85% do tamanho. */
+@media screen{
+  .card--saida .label{
+    animation:none;
+    transform:scale(.85);
+    transform-origin:top center;
+    margin-bottom:-69px;
+  }
 }
 
 /* .field label vence .check por especificidade — precisa do mesmo peso */
@@ -302,7 +307,7 @@ footer.company{
   .duo{grid-template-columns:1fr;}
   .card--form{position:static;}
 }
-@media (max-width:640px){
+@media screen and (max-width:640px){
   body{padding:22px 14px 50px;}
   .card{padding:22px 18px 20px;}
   .field{min-width:100%;}
@@ -624,9 +629,11 @@ footer.company{
 
   .labels{display:block; padding:0; margin:0; gap:0}
 
+  .card--saida .label,
   .label{
-    width:100mm;
-    height:122mm;
+    width:100mm !important;
+    height:122mm !important;
+    transform:none !important;
     margin:0;
     border:0;
     border-radius:0;

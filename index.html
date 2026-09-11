@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-versao="7">
+<html lang="pt-BR" data-versao="9">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -429,25 +429,21 @@
 <body>
 <script>
 /* O GitHub Pages entrega o HTML com cache de 10 minutos, então logo depois de uma
-   publicação o navegador ainda mostra a página antiga. Aqui a versão do servidor é
-   conferida e, se for diferente da que carregou, a página é trocada por uma URL
-   com a versão nova — recarregar puro não resolve, porque volta do mesmo cache.
-   A chave guarda "qual versão eu já conferi", então cada versão carregada dispara
-   no máximo uma troca. Sem laço, e nada acontece se estiver tudo em dia. */
+   publicação o navegador ainda mostra a página antiga. Aqui a versão publicada é
+   conferida a cada carregamento e, se for diferente da que abriu, a página é
+   trocada por uma URL com a versão nova — recarregar puro não resolve, porque
+   volta do mesmo cache. O ?v= na barra de endereço também é o freio: com ele
+   presente não há nova troca, então não existe laço. */
 (function(){
   var V = document.documentElement.getAttribute('data-versao');
-  var chave = 'tb-conferido:' + location.pathname;
+  if (/[?&]v=/.test(location.search)) return;          // já viemos de uma troca
   try{
-    if (sessionStorage.getItem(chave) === V) return;
     fetch(location.pathname, { cache: 'reload' })
       .then(function(r){ return r.ok ? r.text() : null; })
       .then(function(t){
-        sessionStorage.setItem(chave, V);      // esta versão já foi conferida
         if (!t) return;
         var m = t.match(/data-versao="([^"]+)"/);
-        if (m && m[1] !== V){
-          location.replace(location.pathname + '?v=' + m[1]);
-        }
+        if (m && m[1] !== V) location.replace(location.pathname + '?v=' + m[1]);
       })
       .catch(function(){});
   }catch(e){}

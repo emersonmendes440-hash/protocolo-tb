@@ -39,7 +39,7 @@ body{
     linear-gradient(180deg,var(--bg0),var(--bg1) 40%,#0a0c11);
   color:var(--ink);
   min-height:100vh;
-  padding:20px 18px 30px;
+  padding:20px 18px 18px;
 }
 
 .wrap{max-width:1180px;margin:0 auto;}
@@ -111,7 +111,7 @@ kbd{
 
 .card{
   background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
-  padding:18px 22px 18px;position:relative;overflow:hidden;
+  padding:16px 20px 16px;position:relative;overflow:hidden;
   animation:fadeUp .6s .1s ease both;
 }
 .card::before{
@@ -121,21 +121,21 @@ kbd{
 .card--form{position:sticky;top:20px;}
 
 .card-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
-.card-head h2{margin:0;font-size:22px;letter-spacing:.3px;color:var(--ink);}
+.card-head h2{margin:0;font-size:19px;letter-spacing:.3px;color:var(--ink);}
 .card--saida .card-head h2{font-size:18px;}
 .save-indicator{font-size:11.5px;color:var(--muted);display:flex;align-items:center;gap:6px;}
 .save-indicator .dot2{width:6px;height:6px;border-radius:50%;background:var(--ok);}
 
 /* ---------- Campos ---------- */
-.field-row{display:flex;gap:12px;flex-wrap:wrap;margin:11px 0 0;}
+.field-row{display:flex;gap:12px;flex-wrap:wrap;margin:9px 0 0;}
 .field{flex:1;min-width:150px;}
 .field label,.field .label-like{
-  display:block;font-size:11.5px;font-weight:700;color:var(--muted);
-  text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;
+  display:block;font-size:11px;font-weight:700;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;
 }
 .field .opt{font-weight:600;text-transform:none;letter-spacing:0;opacity:.75;}
 .field input,.field select{
-  width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;
+  width:100%;height:34px;border:1.5px solid var(--line);border-radius:10px;padding:0 11px;
   font-size:14px;font-family:inherit;transition:border-color .2s ease, box-shadow .2s ease;
   background:var(--bg1);color:var(--ink);
 }
@@ -154,7 +154,7 @@ kbd{
 }
 .field--danfe input{font-size:12.5px;letter-spacing:0;}
 
-.hint{margin:6px 0 0;font-size:11.5px;color:var(--muted);min-height:1px;}
+.hint{margin:4px 0 0;font-size:11px;color:var(--muted);min-height:1px;}
 .hint.is-ok{color:var(--ok);font-weight:600;}
 .hint.is-error{color:#ff6b7a;font-weight:600;}
 .hint.is-loading{color:var(--ink);}
@@ -182,7 +182,7 @@ kbd{
 
 /* caixa de marcar */
 .check{
-  display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;font-weight:400;
+  display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12px;font-weight:400;
   letter-spacing:0;text-transform:none;color:var(--muted);cursor:pointer;user-select:none;
 }
 .field .check input{
@@ -221,9 +221,9 @@ kbd{
 .suggestions .tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.16);}
 
 /* ---------- Botões ---------- */
-.actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;}
+.actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
 .btn{
-  padding:13px 18px;border-radius:12px;border:none;font-size:14.5px;font-weight:700;
+  padding:11px 18px;border-radius:11px;border:none;font-size:14px;font-weight:700;
   cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
   transition:all .2s ease;letter-spacing:.2px;font-family:inherit;
 }
@@ -265,12 +265,12 @@ kbd{
 .toast.is-error{border-color:var(--accent);}
 
 /* todos os controles na mesma altura do campo de texto */
-.segmented{height:38px;}
+.segmented{height:34px;}
 .segment span{height:100%;display:flex;align-items:center;justify-content:center;padding:0;}
-.stepper{height:38px;}
+.stepper{height:34px;}
 .stepper-btn{padding:0;height:100%;}
 .stepper input{padding:0;height:100%;}
-.code-preview{height:38px;padding:0 12px;}
+.code-preview{height:34px;padding:0 11px;}
 
 /* a etiqueta é maior que a coluna da direita: reduz só na tela (a impressão volta ao tamanho real).
    A animação "pop" precisa sair, senão o fill-mode fixa transform:none e anula o scale. */

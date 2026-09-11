@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-versao="7">
+<html lang="pt-BR" data-versao="8">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="etiqueta-style.css?v=7">
+<link rel="stylesheet" href="etiqueta-style.css?v=8">
 </head>
 <body>
 <script>
@@ -99,33 +99,30 @@
 
       <form id="form-etiqueta" autocomplete="off" novalidate>
         <div class="field-row">
-          <div class="field field--full">
+          <div class="field field--full" style="min-width:240px">
             <label for="nome">Nome do destinatário</label>
             <input type="text" id="nome" name="nome" data-required placeholder="Nome ou razão social">
           </div>
-        </div>
-
-        <div class="field-row">
-          <div class="field field--cep" style="max-width:160px">
+          <div class="field field--cep" style="max-width:126px;min-width:112px">
             <label for="cep">CEP</label>
             <input type="text" id="cep" name="cep" data-required inputmode="numeric"
                    maxlength="9" placeholder="00000-000" class="mono">
-            <p class="hint" id="cep-status" role="status" aria-live="polite"></p>
           </div>
-          <div class="field field--numero" style="max-width:110px">
+          <div class="field field--numero" style="max-width:100px;min-width:88px">
             <label for="numero">Número</label>
             <input type="text" id="numero" name="numero" data-required class="mono" placeholder="270">
-          </div>
-          <div class="field field--complemento">
-            <label for="complemento">Complemento <span class="opt">opcional</span></label>
-            <input type="text" id="complemento" name="complemento" placeholder="Sala, bloco, apto">
           </div>
         </div>
 
         <div class="field-row">
-          <div class="field field--endereco">
+          <div class="field field--endereco" style="min-width:220px">
             <label for="endereco">Endereço</label>
             <input type="text" id="endereco" name="endereco" data-required placeholder="Preenchido pelo CEP">
+            <p class="hint" id="cep-status" role="status" aria-live="polite"></p>
+          </div>
+          <div class="field field--complemento" style="min-width:150px">
+            <label for="complemento">Complemento <span class="opt">opcional</span></label>
+            <input type="text" id="complemento" name="complemento" placeholder="Sala, bloco, apto">
           </div>
         </div>
 
@@ -138,7 +135,7 @@
             <label for="cidade">Cidade</label>
             <input type="text" id="cidade" name="cidade" data-required placeholder="Preenchido pelo CEP">
           </div>
-          <div class="field field--uf" style="max-width:96px;min-width:86px">
+          <div class="field field--uf" style="max-width:88px;min-width:80px">
             <label for="uf">UF</label>
             <select id="uf" name="uf" data-required>
               <option value="">--</option>
@@ -237,7 +234,6 @@
 
   </div><!-- /.duo -->
 
-  <footer class="company">TB — Comércio De Presentes S.A.</footer>
 
 </div><!-- /.wrap -->
 </div><!-- /#appScreen -->
@@ -295,6 +291,6 @@
   logoutBtn.addEventListener('click', ()=> signOut(auth));
 </script>
 
-<script src="etiqueta-script.js?v=7"></script>
+<script src="etiqueta-script.js?v=8"></script>
 </body>
 </html>

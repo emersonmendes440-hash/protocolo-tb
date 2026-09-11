@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-versao="6">
+<html lang="pt-BR" data-versao="7">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Etiqueta de transportadora — TB Comércio de Presentes</title>
+<title>Etq. Transportadora — TB Comércio de Presentes</title>
 
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.ico" sizes="any">
@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="etiqueta-style.css?v=6">
+<link rel="stylesheet" href="etiqueta-style.css?v=7">
 </head>
 <body>
 <script>
@@ -81,8 +81,8 @@
     <div class="topbar-right">
       <div class="nav-links">
         <a href="index.html">Protocolo</a>
-        <a href="etiqueta.html" class="active">Transportadora</a>
-        <a href="transferencia.html">Transferência</a>
+        <a href="etiqueta.html" class="active">Etq. Transportadora</a>
+        <a href="transferencia.html">Etq. Transferência</a>
       </div>
       <button id="logoutBtn" class="logout-btn" style="display:none;">Sair</button>
     </div>
@@ -163,32 +163,28 @@
         </div>
 
         <div class="field-row">
-          <div class="field field--nf" style="max-width:140px">
+          <div class="field field--nf" style="max-width:118px;min-width:100px">
             <label for="nf">Nota fiscal</label>
             <input type="text" id="nf" name="nf" data-required inputmode="numeric" class="mono" placeholder="000000">
           </div>
-          <div class="field field--serie" style="max-width:96px;min-width:86px">
+          <div class="field field--serie" style="max-width:82px;min-width:74px">
             <label for="serie">Série</label>
             <input type="text" id="serie" name="serie" inputmode="numeric" maxlength="3" class="mono" placeholder="1">
           </div>
-          <div class="field field--tipo" style="max-width:170px">
+          <div class="field field--tipo" style="max-width:150px;min-width:140px">
             <span class="label-like">Tipo</span>
             <div class="segmented" role="radiogroup" aria-label="Tipo do pedido">
               <label class="segment"><input type="radio" name="tipo" value="TBS" checked><span>TBS</span></label>
               <label class="segment"><input type="radio" name="tipo" value="TRAN"><span>TRAN</span></label>
             </div>
           </div>
-          <div class="field field--pedido" style="max-width:170px">
-            <label for="pedido">Número do pedido</label>
+          <div class="field field--pedido" style="max-width:132px;min-width:118px">
+            <label for="pedido">Pedido</label>
             <input type="text" id="pedido" name="pedido" data-required inputmode="numeric" class="mono" placeholder="0049974">
           </div>
-        </div>
-
-        <div class="field-row">
-          <div class="field">
+          <div class="field" style="min-width:150px">
             <span class="label-like">Identificação</span>
-            <output class="code-preview" id="codigo-preview" for="pedido">
-              <span class="code-preview-key">Tipo / Pedido</span>
+            <output class="code-preview code-preview--so" id="codigo-preview" for="pedido">
               <strong id="codigo-valor">TBS-—</strong>
             </output>
           </div>
@@ -299,6 +295,6 @@
   logoutBtn.addEventListener('click', ()=> signOut(auth));
 </script>
 
-<script src="etiqueta-script.js?v=6"></script>
+<script src="etiqueta-script.js?v=7"></script>
 </body>
 </html>

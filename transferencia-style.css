@@ -39,7 +39,7 @@ body{
     linear-gradient(180deg,var(--bg0),var(--bg1) 40%,#0a0c11);
   color:var(--ink);
   min-height:100vh;
-  padding:34px 18px 60px;
+  padding:20px 18px 30px;
 }
 
 .wrap{max-width:1180px;margin:0 auto;}
@@ -52,7 +52,7 @@ kbd{
 /* ---------- Barra superior (idêntica à do Protocolo) ---------- */
 .topbar{
   display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:24px;flex-wrap:wrap;gap:14px;
+  margin-bottom:16px;flex-wrap:wrap;gap:14px;
   animation:fadeDown .6s ease both;
 }
 .brand{display:flex;align-items:center;gap:13px;}
@@ -111,7 +111,7 @@ kbd{
 
 .card{
   background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
-  padding:26px 26px 24px;position:relative;overflow:hidden;
+  padding:18px 22px 18px;position:relative;overflow:hidden;
   animation:fadeUp .6s .1s ease both;
 }
 .card::before{
@@ -127,7 +127,7 @@ kbd{
 .save-indicator .dot2{width:6px;height:6px;border-radius:50%;background:var(--ok);}
 
 /* ---------- Campos ---------- */
-.field-row{display:flex;gap:16px;flex-wrap:wrap;margin:18px 0 0;}
+.field-row{display:flex;gap:12px;flex-wrap:wrap;margin:11px 0 0;}
 .field{flex:1;min-width:150px;}
 .field label,.field .label-like{
   display:block;font-size:11.5px;font-weight:700;color:var(--muted);
@@ -199,6 +199,10 @@ kbd{
 .code-preview-key{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);}
 .code-preview strong{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--accent);letter-spacing:.4px;}
 
+/* identificação compacta: o rótulo já está acima do campo */
+.code-preview--so{justify-content:center;}
+.code-preview--so strong{font-size:14.5px;}
+
 /* autocomplete */
 .autocomplete{position:relative;}
 .suggestions{
@@ -217,7 +221,7 @@ kbd{
 .suggestions .tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;background:rgba(255,255,255,.16);}
 
 /* ---------- Botões ---------- */
-.actions{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap;}
+.actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;}
 .btn{
   padding:13px 18px;border-radius:12px;border:none;font-size:14.5px;font-weight:700;
   cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
@@ -238,9 +242,9 @@ kbd{
 
 /* ---------- Saída ---------- */
 .print-tip{margin:8px 0 0;font-size:11.5px;color:var(--muted);}
-.labels{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:18px;}
+.labels{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:14px;}
 .empty{
-  width:100%;min-height:260px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:100%;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:14px;border:1.5px dashed var(--line);border-radius:14px;color:var(--muted);font-size:13.5px;
 }
 .empty p{margin:0;}
@@ -273,12 +277,32 @@ kbd{
 /* SÓ NA TELA. Sem o @media screen esta regra vencia a da impressão por
    especificidade (.card--saida .label = 0,2,0 contra .label = 0,1,0; media query
    não soma especificidade) e a etiqueta saía impressa a 85% do tamanho. */
+/* Na tela mostra só a PRIMEIRA etiqueta, como exemplo — as demais continuam no
+   documento (e saem todas na impressão), apenas fora de vista. Usa position
+   absoluta em vez de display:none de propósito: o encaixe automático do texto
+   mede cada etiqueta, e um elemento com display:none mede zero, o que faria o
+   texto das demais sair errado no papel. */
+@media screen{
+  .card--saida .label ~ .label{
+    position:absolute;
+    left:-20000px;
+    top:0;
+    visibility:hidden;
+  }
+}
+
 @media screen{
   .card--saida .label{
     animation:none;
+    /* flex:none é essencial. Sem ele a etiqueta era espremida de 378 px (100 mm)
+       para a largura do cartão, e o encaixe automático do texto media essa largura
+       errada — o texto saía impresso menor do que cabia. O tamanho da prévia vem
+       só do transform, que não mexe no layout; as margens negativas descontam o
+       espaço que a redução deixou sobrando. */
+    flex:none;
     transform:scale(.85);
     transform-origin:top center;
-    margin-bottom:-69px;
+    margin:0 -28px -69px;
   }
 }
 
@@ -293,7 +317,7 @@ kbd{
 .code-preview-key{flex:none;}
 
 footer.company{
-  text-align:center;margin-top:26px;color:var(--muted);font-size:11.5px;line-height:1.7;
+  text-align:center;margin-top:16px;color:var(--muted);font-size:11.5px;line-height:1.7;
   animation:fadeUp .6s .15s ease both;
 }
 

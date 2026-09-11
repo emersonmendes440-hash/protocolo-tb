@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-versao="5">
+<html lang="pt-BR" data-versao="7">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,7 +35,7 @@
       linear-gradient(180deg,var(--bg0),var(--bg1) 40%,#0a0c11);
     color:var(--ink);
     min-height:100vh;
-    padding:34px 18px 90px;
+    padding:20px 18px 30px;
     transition:background 0.7s ease;
   }
 
@@ -44,7 +44,7 @@
   /* ---------- Top bar / brand ---------- */
   .topbar{
     display:flex;align-items:center;justify-content:space-between;
-    margin-bottom:28px;flex-wrap:wrap;gap:14px;
+    margin-bottom:16px;flex-wrap:wrap;gap:14px;
     animation:fadeDown .6s ease both;
   }
   .brand{display:flex;align-items:center;gap:13px;}
@@ -115,7 +115,7 @@
 
   /* ---------- Carrier tabs ---------- */
   .carriers{
-    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;
     animation:fadeUp .6s .05s ease both;
   }
   .carrier-btn{
@@ -148,7 +148,7 @@
   /* ---------- Card ---------- */
   .card{
     background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
-    padding:28px 26px 24px;position:relative;overflow:hidden;
+    padding:18px 22px 18px;position:relative;overflow:hidden;
     animation:fadeUp .6s .1s ease both;
   }
   .card::before{
@@ -164,7 +164,7 @@
   .save-indicator.show{opacity:1;}
   .save-indicator .dot2{width:6px;height:6px;border-radius:50%;background:#4ade80;}
 
-  .field-row{display:flex;gap:16px;flex-wrap:wrap;margin:18px 0 6px;}
+  .field-row{display:flex;gap:12px;flex-wrap:wrap;margin:11px 0 0;}
   .field{flex:1;min-width:160px;}
   .field label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
   .field input{
@@ -223,7 +223,7 @@
   .totals .value.pulse{animation:pop .3s ease;}
 
   /* ---------- Actions ---------- */
-  .actions{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;}
+  .actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;}
   .btn{
     flex:1;min-width:180px;padding:14px 18px;border-radius:12px;border:none;font-size:14.5px;font-weight:700;
     cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s ease;
@@ -236,7 +236,7 @@
   .btn-ghost:hover{border-color:#3d4356;color:var(--ink);}
 
   footer.company{
-    text-align:center;margin-top:26px;color:var(--muted);font-size:11.5px;line-height:1.7;
+    text-align:center;margin-top:16px;color:var(--muted);font-size:11.5px;line-height:1.7;
     animation:fadeUp .6s .15s ease both;
   }
 
@@ -489,8 +489,8 @@
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
       <div class="nav-links">
         <a href="index.html" class="active">Protocolo</a>
-        <a href="etiqueta.html">Transportadora</a>
-        <a href="transferencia.html">Transferência</a>
+        <a href="etiqueta.html">Etq. Transportadora</a>
+        <a href="transferencia.html">Etq. Transferência</a>
       </div>
       <button id="logoutBtn" class="logout-btn" style="display:none;">Sair</button>
     </div>
